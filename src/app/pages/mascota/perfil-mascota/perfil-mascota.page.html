@@ -48,10 +48,8 @@
     <!-- Info nombre -->
     <div class="pm-hero-info">
       @if (mascota()) {
-        <p class="pm-hero-eyebrow">Mi mascota</p>
         <h1 class="pm-hero-name">{{ mascota().nombre | titlecase }}</h1>
       } @else {
-        <div class="pm-sk-eyebrow"></div>
         <div class="pm-sk-name"></div>
       }
     </div>
