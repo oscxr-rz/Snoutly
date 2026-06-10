@@ -1,0 +1,75 @@
+<div class="pu-topbar">
+  <button class="pu-topbar-btn" (click)="goBack()" aria-label="Volver">
+    <ion-icon name="arrow-back-outline" />
+  </button>
+  <div class="pu-brand">
+    <span class="pu-brand-name">Perfil</span>
+  </div>
+  <div style="width:36px"></div>
+</div>
+
+<ion-content [fullscreen]="true" class="pu-content">
+  <div class="pu-body">
+
+    <div class="pu-card">
+      <div class="pu-avatar-wrap">
+        @if (usuario()?.imagen_url) {
+          <img
+            [src]="usuario().imagen_url"
+            alt="Foto de perfil"
+            class="pu-avatar-img"
+            [class.is-loaded]="imgLoaded()"
+            (load)="onImgLoad()"
+          />
+        } @else {
+          <ion-icon name="person-outline" class="pu-avatar-icon" />
+        }
+        <button
+          class="pu-fab-edit"
+          (click)="abrirSelectorImagen()"
+          [disabled]="subiendoImagen()"
+          aria-label="Editar foto"
+        >
+          <ion-icon [name]="subiendoImagen() ? 'sync-outline' : 'pencil-outline'"
+                    [class.spin]="subiendoImagen()" />
+        </button>
+        <input
+          #fileInput
+          type="file"
+          accept="image/*"
+          class="pu-file-hidden"
+          (change)="onImagenSeleccionada($event)"
+        />
+      </div>
+
+      <div class="pu-fields">
+        <div class="pu-field-row">
+          <span class="pu-field-label">Nombre:</span>
+          <span class="pu-field-value">{{ usuario()?.nombre_completo ?? '—' }}</span>
+        </div>
+        <div class="pu-field-row">
+          <span class="pu-field-label">Correo:</span>
+          <span class="pu-field-value">{{ usuario()?.correo_electronico ?? '—' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pu-actions">
+      <button class="pu-btn btn-ghost" (click)="cambiarContrasena()">
+        Cambiar contraseña
+      </button>
+      <button class="pu-btn btn-solid" (click)="confirmarCerrarSesion()">
+        Cerrar sesión
+      </button>
+    </div>
+
+  </div>
+
+  <ion-action-sheet
+    [isOpen]="actionSheetOpen()"
+    [buttons]="actionButtons"
+    (didDismiss)="actionSheetOpen.set(false)"
+  />
+</ion-content>
+
+<app-navbar />

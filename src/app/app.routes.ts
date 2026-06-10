@@ -14,6 +14,11 @@ export const routes: Routes = [
     loadChildren: () => import('./pages/mascota/mascota.routes').then((r) => r.MASCOTA_ROUTES),
   },
   {
+    path: 'usuario',
+    canActivate: [authGuard],
+    loadChildren: () => import('./pages/usuario/usuario.routes').then((r) => r.USUARIO_ROUTES),
+  },
+  {
     path: 'mapa',
     canActivate: [authGuard],
     component: MapPage,
@@ -26,5 +31,9 @@ export const routes: Routes = [
   {
     path: 'map',
     loadComponent: () => import('./pages/map/map.page').then( m => m.MapPage)
+  },
+  {
+    path: 'perfil',
+    loadComponent: () => import('./pages/usuario/perfil/perfil.page').then( m => m.PerfilPage)
   },
 ];

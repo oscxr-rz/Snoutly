@@ -1,0 +1,256 @@
+$blue-dark  : #7096D1;
+$amber      : #F9B74E;
+$amber-soft : rgba(249,183,78,0.28);
+$blue-light : #D6E3F8;
+$ink        : #1A1A2E;
+$ink55      : rgba(26,26,46,0.55);
+$ink20      : rgba(26,26,46,0.20);
+$ink09      : rgba(26,26,46,0.09);
+$white      : #FFFFFF;
+$bg         : #F4F6FB;
+$topbar-h   : 56px;
+$r-card     : 20px;
+$r-pill     : 100px;
+$font       : -apple-system, 'SF Pro Display', 'Helvetica Neue', system-ui, sans-serif;
+
+.pu-topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  height: $topbar-h;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  padding-top: env(safe-area-inset-top, 0);
+  background: $blue-dark;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.10),
+              0 2px 12px rgba(26,26,46,0.14);
+}
+
+.pu-topbar-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+
+  ion-icon {
+    font-size: 1.2rem;
+    color: $white;
+    pointer-events: none;
+  }
+
+  &:active {
+    background: rgba(255,255,255,0.28);
+    transform: scale(0.90);
+  }
+}
+
+.pu-brand {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.pu-brand-name {
+  font-family: $font;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: $white;
+}
+
+ion-content.pu-content {
+  --background: #{$bg};
+  --padding-top: #{$topbar-h};
+  --padding-bottom: 88px;
+}
+
+.pu-file-hidden { display: none; }
+
+.pu-body {
+  padding: 32px 20px 40px;
+  animation: slideUp 0.40s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+.pu-card {
+  background: $white;
+  border-radius: $r-card;
+  padding: 28px 20px 24px;
+  box-shadow: 0 2px 16px rgba(26,26,46,0.07);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: contentIn 0.38s ease 0.06s both;
+}
+
+.pu-avatar-wrap {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: $blue-light;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 16px rgba(112,150,209,0.25);
+  overflow: visible;
+}
+
+.pu-avatar-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  opacity: 0;
+  filter: blur(8px);
+  transition: opacity 0.45s ease, filter 0.45s ease;
+
+  &.is-loaded {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+.pu-avatar-icon {
+  font-size: 2.8rem;
+  color: $blue-dark;
+}
+
+.pu-fab-edit {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2.5px solid $bg;
+  background: $blue-dark;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: $white;
+  transition: transform 0.20s cubic-bezier(0.34,1.56,0.64,1);
+  animation: popIn 0.35s cubic-bezier(0.34,1.56,0.64,1) 0.25s both;
+
+  ion-icon {
+    font-size: 0.80rem;
+    pointer-events: none;
+  }
+
+  &:active { transform: scale(0.88); }
+  &[disabled] { opacity: 0.55; pointer-events: none; }
+}
+
+.spin {
+  animation: spinIcon 0.85s linear infinite;
+}
+
+.pu-fields {
+  width: 100%;
+}
+
+.pu-field-row {
+  display: flex;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 0.5px solid $ink09;
+
+  &:last-child { border-bottom: none; }
+}
+
+.pu-field-label {
+  font-family: $font;
+  font-size: 0.87rem;
+  font-weight: 700;
+  color: $ink;
+  min-width: 106px;
+  flex-shrink: 0;
+}
+
+.pu-field-value {
+  font-family: $font;
+  font-size: 0.87rem;
+  font-weight: 400;
+  color: $ink55;
+}
+
+.pu-field-dots {
+  font-family: $font;
+  font-size: 0.87rem;
+  font-weight: 700;
+  color: $ink55;
+  letter-spacing: 0.12em;
+}
+
+.pu-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+  animation: contentIn 0.38s ease 0.12s both;
+}
+
+.pu-btn {
+  width: 100%;
+  padding: 15px 10px;
+  border-radius: $r-pill;
+  font-family: $font;
+  font-size: 0.90rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1),
+              box-shadow 0.18s ease,
+              opacity 0.14s ease;
+
+  &:active { transform: scale(0.96); opacity: 0.85; }
+
+  &.btn-ghost {
+    background: $white;
+    color: $ink;
+    box-shadow: 0 0 0 1.5px $blue-dark;
+  }
+
+  &.btn-solid {
+    background: $amber;
+    color: $ink;
+    box-shadow: 0 6px 18px $amber-soft;
+    &:active { box-shadow: 0 2px 8px $amber-soft; }
+  }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(16px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+@keyframes contentIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes popIn {
+  from { transform: scale(0.6); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+@keyframes spinIcon {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
