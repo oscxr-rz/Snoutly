@@ -1,0 +1,78 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" />
+    </ion-buttons>
+    <ion-title>Formulario</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="form-body">
+
+    <div class="field">
+      <label>Nombre:</label>
+      <input type="text" [ngModel]="nombre()" (ngModelChange)="nombre.set($event)" autocomplete="off" />
+    </div>
+
+    <div class="field">
+      <label>Raza:</label>
+      <input type="text" [ngModel]="raza()" (ngModelChange)="raza.set($event)" autocomplete="off" />
+    </div>
+
+    <div class="field-row">
+      <div class="field-inline">
+        <label>Peso:</label>
+        <div class="input-unit-wrap">
+          <input type="number" min="0" step="0.1" [ngModel]="peso()" (ngModelChange)="peso.set(+$event)" />
+          <span class="unit">kg</span>
+        </div>
+      </div>
+      <div class="field-inline">
+        <label>Altura:</label>
+        <div class="input-unit-wrap">
+          <input type="number" min="0" step="1" [ngModel]="altura()" (ngModelChange)="altura.set(+$event)" />
+          <span class="unit">cm</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Sexo:</label>
+      <div class="toggle-group">
+        <button class="toggle-btn" [class.active]="sexo() === 'macho'" (click)="sexo.set('macho')">Macho</button>
+        <button class="toggle-btn" [class.active]="sexo() === 'hembra'" (click)="sexo.set('hembra')">Hembra</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Fecha de nacimiento:</label>
+      <div class="fecha-wrap">
+        <span class="fecha-texto">
+          {{ fechaNacimiento() ? (fechaNacimiento() | slice:0:10) : 'Día / Mes / Año' }}
+        </span>
+        <ion-datetime-button datetime="dtNacimiento" class="dt-btn">
+          <ion-icon slot="date-target" name="calendar-outline" />
+        </ion-datetime-button>
+      </div>
+
+      <ion-modal [keepContentsMounted]="true" class="dt-modal">
+        <ng-template>
+          <ion-datetime id="dtNacimiento" presentation="date" locale="es-MX" [max]="today"
+            (ionChange)="onFechaChange($event)" showDefaultButtons="true" doneText="Aceptar" cancelText="Cancelar" />
+        </ng-template>
+      </ion-modal>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <ion-button expand="block" class="btn-guardar" [disabled]="loading()" (click)="onGuardar()">
+      @if (loading()) {
+      <ion-spinner name="crescent" />
+      } @else {
+      Guardar
+      }
+    </ion-button>
+  </div>
+</ion-content>

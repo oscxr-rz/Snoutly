@@ -1,0 +1,21 @@
+.custom-navbar {
+  --background: #f5d77a;
+  --color: #1a1a2e;
+  --color-selected: #1a1a2e;
+  border-top: none;
+  height: 64px;
+
+  ion-tab-button {
+    --color: #1a1a2e;
+    --color-selected: #1a1a2e;
+
+    ion-icon {
+      font-size: 1.6rem;
+    }
+
+    &.active ion-icon {
+      font-weight: 900;
+      filter: drop-shadow(0 0 2px rgba(0,0,0,.3));
+    }
+  }
+}

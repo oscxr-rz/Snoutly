@@ -1,0 +1,181 @@
+<!-- ══════════════════════════════════════════════════
+     TOPBAR
+     ══════════════════════════════════════════════════ -->
+<div class="pm-topbar">
+  <button class="pm-topbar-btn" (click)="agregarMascota()" aria-label="Agregar mascota">
+    <ion-icon name="add-outline" />
+  </button>
+
+  <div class="pm-brand">
+    <ion-icon name="paw-outline" class="pm-brand-paw" />
+    <span class="pm-brand-name">Snoutly</span>
+  </div>
+
+  <button class="pm-topbar-btn" (click)="actionSheetOpen.set(true)" aria-label="Opciones">
+    <ion-icon name="ellipsis-horizontal" />
+  </button>
+</div>
+
+<ion-content [fullscreen]="true" class="pm-content">
+
+  <!-- ══════════════════════════════════════════════════
+       HERO
+       ══════════════════════════════════════════════════ -->
+  <div class="pm-hero">
+
+    <!-- Imagen — empieza invisible, aparece suave al cargar -->
+    @if (mascota()?.imagen_url) {
+      <img
+        [src]="mascota().imagen_url"
+        alt="Foto de {{ mascota().nombre }}"
+        class="pm-hero-img"
+        [class.is-loaded]="imgLoaded()"
+        [class.is-uploading]="subiendoImagen()"
+        (load)="onHeroImgLoad()"
+      />
+    }
+
+    <!-- Placeholder cuando no hay foto -->
+    @if (mascota() && !mascota().imagen_url) {
+      <div class="pm-hero-empty">
+        <ion-icon name="paw-outline" />
+      </div>
+    }
+
+    <!-- Gradiente -->
+    <div class="pm-hero-gradient"></div>
+
+    <!-- Info nombre -->
+    <div class="pm-hero-info">
+      @if (mascota()) {
+        <p class="pm-hero-eyebrow">Mi mascota</p>
+        <h1 class="pm-hero-name">{{ mascota().nombre | titlecase }}</h1>
+      } @else {
+        <div class="pm-sk-eyebrow"></div>
+        <div class="pm-sk-name"></div>
+      }
+    </div>
+
+    <!-- Overlay upload — minimalista -->
+    @if (subiendoImagen()) {
+      <div class="pm-upload-veil">
+        <div class="pm-upload-arc"></div>
+      </div>
+    }
+
+    <!-- Flash éxito -->
+    @if (uploadSuccess()) {
+      <div class="pm-upload-veil pm-upload-veil--success">
+        <ion-icon name="checkmark-outline" />
+      </div>
+    }
+
+    <input
+      #fileInput
+      type="file"
+      accept="image/*"
+      class="pm-file-hidden"
+      (change)="onImagenSeleccionada($event)"
+    />
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       BODY
+       ══════════════════════════════════════════════════ -->
+  <div class="pm-body">
+
+    <!-- Handle + nav + FAB cámara -->
+    <div class="pm-body-header">
+      <div class="pm-handle"></div>
+
+      <div class="pm-nav">
+        <button class="pm-nav-arrow" [disabled]="!hayAnterior()" (click)="anterior()">
+          <ion-icon name="chevron-back-outline" />
+        </button>
+
+        <div class="pm-dots">
+          @for (id of ids(); track id; let i = $index) {
+            <span class="pm-dot" [class.active]="i === indice()"></span>
+          }
+        </div>
+
+        <button class="pm-nav-arrow" [disabled]="!haySiguiente()" (click)="siguiente()">
+          <ion-icon name="chevron-forward-outline" />
+        </button>
+      </div>
+    </div>
+
+    <!-- FAB cámara flotante -->
+    @if (mascota()) {
+      <button
+        class="pm-fab-camera"
+        (click)="abrirSelectorImagen()"
+        [disabled]="subiendoImagen()"
+        aria-label="Cambiar foto"
+      >
+        <ion-icon [name]="subiendoImagen() ? 'paw-outline' : 'camera-outline'"
+                  [class.paw-pulse]="subiendoImagen()" />
+      </button>
+    }
+
+    <!-- Stats -->
+    @if (mascota()) {
+      <div class="pm-stats-grid">
+        <div class="pm-stat-card pm-stat--amber">
+          <span class="pm-stat-label">Peso</span>
+          <div class="pm-stat-value-row">
+            <span class="pm-stat-value">{{ mascota().registro_peso?.peso ?? '—' }}</span>
+            <span class="pm-stat-unit">kg</span>
+          </div>
+        </div>
+        <div class="pm-stat-card pm-stat--lime">
+          <span class="pm-stat-label">Altura</span>
+          <div class="pm-stat-value-row">
+            <span class="pm-stat-value">{{ mascota().altura ?? '—' }}</span>
+            <span class="pm-stat-unit">cm</span>
+          </div>
+        </div>
+        <div class="pm-stat-card pm-stat--rose">
+          <span class="pm-stat-label">Raza</span>
+          <span class="pm-stat-text">{{ mascota().raza ?? '—' }}</span>
+        </div>
+        <div class="pm-stat-card pm-stat--sky">
+          <span class="pm-stat-label">Sexo</span>
+          <span class="pm-stat-text">{{ mascota().sexo | titlecase }}</span>
+        </div>
+      </div>
+
+      <div class="pm-actions">
+        <button class="pm-action-btn pm-action-btn--ghost">
+          <ion-icon name="medkit-outline" />
+          <span>Consulta</span>
+        </button>
+        <button class="pm-action-btn pm-action-btn--solid">
+          <ion-icon name="calendar-outline" />
+          <span>Agendar cita</span>
+        </button>
+      </div>
+
+    } @else {
+      <div class="pm-sk-grid">
+        <div class="pm-sk-card"></div>
+        <div class="pm-sk-card"></div>
+        <div class="pm-sk-card"></div>
+        <div class="pm-sk-card"></div>
+      </div>
+      <div class="pm-sk-actions">
+        <div class="pm-sk-btn"></div>
+        <div class="pm-sk-btn"></div>
+      </div>
+    }
+  </div>
+
+  <ion-action-sheet
+    [isOpen]="actionSheetOpen()"
+    [buttons]="actionButtons"
+    (didDismiss)="actionSheetOpen.set(false)"
+  />
+
+</ion-content>
+
+<app-navbar />

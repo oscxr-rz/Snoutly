@@ -1,0 +1,197 @@
+ion-toolbar {
+  --background: #b8c8f0;
+  --color: #1a1a2e;
+
+  ion-title {
+    font-weight: 700;
+  }
+
+  ion-back-button {
+    --color: #1a1a2e;
+  }
+}
+
+ion-content {
+  --background: #f5f5c8;
+  --padding-top: 24px;
+  --padding-start: 20px;
+  --padding-end: 20px;
+  --padding-bottom: 100px;
+}
+
+.form-body {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  label {
+    font-weight: 700;
+    font-size: .95rem;
+    color: #1a1a2e;
+  }
+
+  input {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1.5px solid #1a1a2e;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: .95rem;
+    outline: none;
+    background: #fff;
+    color: #1a1a2e;
+    transition: border-color .2s;
+
+    &:focus {
+      border-color: #7a9de0;
+    }
+  }
+}
+
+.field-row {
+  display: flex;
+  gap: 20px;
+  align-items: flex-end;
+}
+
+.field-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  label {
+    font-weight: 700;
+    font-size: .95rem;
+    color: #1a1a2e;
+    white-space: nowrap;
+  }
+}
+
+.input-unit-wrap {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid #1a1a2e;
+  border-radius: 6px;
+  background: #fff;
+  overflow: hidden;
+
+  input {
+    border: none;
+    width: 56px;
+    padding: 8px 6px;
+    font-size: .9rem;
+    outline: none;
+    background: transparent;
+    color: #1a1a2e;
+    text-align: center;
+    -moz-appearance: textfield;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: auto;
+    }
+  }
+
+  .unit {
+    font-size: .8rem;
+    color: #555;
+    padding-right: 6px;
+  }
+}
+
+.toggle-group {
+  display: flex;
+  border: 1.5px solid #1a1a2e;
+  border-radius: 8px;
+  overflow: hidden;
+  width: fit-content;
+}
+
+.toggle-btn {
+  padding: 8px 28px;
+  font-size: .95rem;
+  font-weight: 500;
+  border: none;
+  background: #fff;
+  color: #1a1a2e;
+  cursor: pointer;
+  transition: background .2s, color .2s;
+
+  &.active {
+    background: #b8c8f0;
+    font-weight: 700;
+  }
+
+  &+& {
+    border-left: 1.5px solid #1a1a2e;
+  }
+}
+
+// --- Datepicker ---
+
+.fecha-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1.5px solid #1a1a2e;
+  border-radius: 6px;
+  background: #fff;
+  padding: 8px 10px;
+}
+
+.fecha-texto {
+  font-size: .95rem;
+  color: #888;
+}
+
+.dt-btn {
+  --padding-start: 0;
+  --padding-end: 0;
+
+  &::part(native) {
+    background: transparent;
+    padding: 0;
+  }
+
+  ion-icon {
+    font-size: 1.2rem;
+    color: #555;
+  }
+}
+
+.dt-modal {
+  --width: 320px;
+  --height: auto;
+  --border-radius: 16px;
+
+  ion-datetime {
+    --background: #fff;
+    --ion-color-primary: #7a9de0;
+  }
+}
+
+// --- Footer ---
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px 20px;
+  background: #f5f5c8;
+}
+
+.btn-guardar {
+  --background: #b8c8f0;
+  --background-activated: #9ab0e0;
+  --color: #1a1a2e;
+  --border-radius: 50px;
+  --box-shadow: none;
+  font-weight: 600;
+}

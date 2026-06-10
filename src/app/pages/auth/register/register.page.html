@@ -1,0 +1,58 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login" />
+    </ion-buttons>
+    <ion-title>Crear sesión</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="form-card">
+
+    <div class="field">
+      <label>Nombre:</label>
+      <input type="text" [ngModel]="nombre()" (ngModelChange)="nombre.set($event)" autocomplete="name" />
+    </div>
+
+    <div class="field">
+      <label>Correo electrónico:</label>
+      <input type="email" [ngModel]="correo()" (ngModelChange)="correo.set($event)" autocomplete="email" />
+    </div>
+
+    <div class="field">
+      <label>Contraseña:</label>
+      <div class="input-icon-wrap">
+        <input [type]="passwordType" [ngModel]="password()" (ngModelChange)="password.set($event)"
+          autocomplete="new-password" />
+        <button class="icon-btn" (click)="showPassword.set(!showPassword())">
+          <ion-icon [name]="showPassword() ? 'eye-outline' : 'eye-off-outline'" />
+        </button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Rectificar contraseña:</label>
+      <div class="input-icon-wrap">
+        <input [type]="confirmPasswordType" [ngModel]="confirmPassword()" (ngModelChange)="confirmPassword.set($event)"
+          autocomplete="new-password" />
+        <button class="icon-btn" (click)="showConfirmPassword.set(!showConfirmPassword())">
+          <ion-icon [name]="showConfirmPassword() ? 'eye-outline' : 'eye-off-outline'" />
+        </button>
+      </div>
+    </div>
+
+    <ion-button expand="block" class="btn-siguiente" [disabled]="loading()" (click)="onSubmit()">
+      @if (loading()) {
+      <ion-spinner name="crescent" />
+      } @else {
+      Siguiente
+      }
+    </ion-button>
+
+  </div>
+
+  <p class="login-link">
+    ¿Ya tienes una cuenta? <a (click)="iniciarSesion()">Iniciar sesión</a>
+  </p>
+</ion-content>

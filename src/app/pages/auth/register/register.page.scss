@@ -1,0 +1,119 @@
+ion-toolbar {
+  --background: #b8c8f0;
+  --color: #1a1a2e;
+
+  ion-title {
+    font-weight: 700;
+  }
+
+  ion-back-button {
+    --color: #1a1a2e;
+  }
+}
+
+ion-content {
+  --background: #f5f5c8;
+  --padding-top: 24px;
+  --padding-start: 20px;
+  --padding-end: 20px;
+  --padding-bottom: 32px;
+}
+
+.form-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .06);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  label {
+    font-weight: 700;
+    font-size: .95rem;
+    color: #1a1a2e;
+  }
+
+  input {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1.5px solid #1a1a2e;
+    border-radius: 6px;
+    padding: 8px 40px 8px 10px;
+    font-size: .95rem;
+    outline: none;
+    background: #fff;
+    color: #1a1a2e;
+    transition: border-color .2s;
+
+    &:focus {
+      border-color: #7a9de0;
+    }
+
+    &[type='date'] {
+      color: #888;
+
+      &::-webkit-calendar-picker-indicator {
+        display: none;
+      }
+    }
+  }
+}
+
+.input-icon-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.icon-btn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: #888;
+  display: flex;
+
+  ion-icon {
+    font-size: 1.2rem;
+  }
+}
+
+.icon-static {
+  position: absolute;
+  right: 10px;
+  color: #888;
+  font-size: 1.2rem;
+  pointer-events: none;
+}
+
+.btn-siguiente {
+  --background: #b8c8f0;
+  --background-activated: #9ab0e0;
+  --color: #1a1a2e;
+  --border-radius: 50px;
+  --box-shadow: none;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+.login-link {
+  margin-top: 20px;
+  text-align: center;
+  font-size: .9rem;
+  color: #555;
+
+  a {
+    color: #3a6fd8;
+    text-decoration: underline;
+    font-weight: 500;
+  }
+}
