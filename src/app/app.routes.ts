@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard, guestGuard } from './core/guards/auth/auth-guard';
+import { MapPage } from './pages/map/map.page';
 
 export const routes: Routes = [
   {
@@ -13,8 +14,17 @@ export const routes: Routes = [
     loadChildren: () => import('./pages/mascota/mascota.routes').then((r) => r.MASCOTA_ROUTES),
   },
   {
+    path: 'mapa',
+    canActivate: [authGuard],
+    component: MapPage,
+  },
+  {
     path: '',
     redirectTo: 'mascota',
     pathMatch: 'full',
+  },
+  {
+    path: 'map',
+    loadComponent: () => import('./pages/map/map.page').then( m => m.MapPage)
   },
 ];

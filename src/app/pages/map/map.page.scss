@@ -1,0 +1,641 @@
+// ═══════════════════════════════════════════════
+// TOKENS — mismos que perfil-mascota
+// ═══════════════════════════════════════════════
+$blue-dark : #7096D1;
+$blue-mid : #B8C8F0;
+$blue-light : #D6E3F8;
+$amber : #F9B74E;
+$amber-soft : rgba(249, 183, 78, 0.28);
+$lime : #E4F2A4;
+$rose : #F8C4C4;
+$sky : #C0DCFB;
+$ink : #1A1A2E;
+$ink-55 : rgba(26, 26, 46, 0.55);
+$ink-20 : rgba(26, 26, 46, 0.20);
+$ink-09 : rgba(26, 26, 46, 0.09);
+$white : #FFFFFF;
+$bg : #F4F6FB;
+$topbar-h : 56px;
+$r-card : 20px;
+$r-pill : 100px;
+$font : -apple-system,
+'SF Pro Display',
+'Helvetica Neue',
+system-ui,
+sans-serif;
+
+// ═══════════════════════════════════════════════
+// TOPBAR — idéntico al de perfil-mascota
+// ═══════════════════════════════════════════════
+.vt-topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  height: $topbar-h;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  padding-top: env(safe-area-inset-top, 0);
+  background: $blue-dark;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.10), 0 2px 12px rgba(26, 26, 46, 0.14);
+}
+
+.vt-topbar-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+
+  ion-icon {
+    font-size: 1.2rem;
+    color: $white;
+    pointer-events: none;
+  }
+
+  &:active {
+    background: rgba(255, 255, 255, 0.28);
+    transform: scale(0.90);
+  }
+}
+
+.vt-brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.vt-brand-paw {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.80);
+}
+
+.vt-brand-name {
+  font-family: $font;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: $white;
+}
+
+// ═══════════════════════════════════════════════
+// CONTENT
+// ═══════════════════════════════════════════════
+ion-content.vt-content {
+  --background: transparent;
+  --padding-top: 0;
+  --padding-bottom: 0;
+}
+
+// ═══════════════════════════════════════════════
+// MAPA
+// ═══════════════════════════════════════════════
+.vt-map-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+
+  #vt-map {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// ═══════════════════════════════════════════════
+// MARCADORES CUSTOM
+// ═══════════════════════════════════════════════
+
+// Punto azul pulsante — usuario
+:global(.vt-marker-user) {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: $blue-dark;
+  border: 3px solid $white;
+  box-shadow: 0 2px 8px rgba(26, 26, 46, 0.30);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:global(.vt-marker-pulse) {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(112, 150, 209, 0.25);
+  animation: pulseRing 2s ease-out infinite;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+// Marcadores de veterinarias
+:global(.vt-marker-vet) {
+  border-radius: 50%;
+  border: 3px solid $white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 10px rgba(26, 26, 46, 0.22);
+  transition: transform 0.20s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.18s ease;
+  cursor: pointer;
+
+  &:global(.is-selected) {
+    border: 3px solid $amber;
+    box-shadow: 0 4px 16px $amber-soft, 0 0 0 3px rgba(249, 183, 78, 0.3);
+    transform: scale(1.18);
+  }
+}
+
+@keyframes pulseRing {
+  0% {
+    transform: translate(-50%, -50%) scale(0.6);
+    opacity: 0.8;
+  }
+
+  80% {
+    transform: translate(-50%, -50%) scale(1.6);
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+// ═══════════════════════════════════════════════
+// BARRA DE BÚSQUEDA FLOTANTE
+// ═══════════════════════════════════════════════
+.vt-search-float {
+  position: fixed;
+  top: calc(#{$topbar-h} + env(safe-area-inset-top, 0px) + 12px);
+  left: 16px;
+  right: 16px;
+  z-index: 150;
+  background: $white;
+  border-radius: $r-pill;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px;
+  height: 48px;
+  box-shadow: 0 4px 20px rgba(26, 26, 46, 0.14);
+  transition: box-shadow 0.20s ease, transform 0.20s ease;
+
+  &.is-focused {
+    box-shadow: 0 6px 24px rgba(112, 150, 209, 0.35);
+    transform: translateY(-1px);
+  }
+}
+
+.vt-search-icon {
+  font-size: 1.1rem;
+  color: $ink-55;
+  flex-shrink: 0;
+}
+
+.vt-search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: $font;
+  font-size: 0.93rem;
+  color: $ink;
+
+  &::placeholder {
+    color: $ink-55;
+  }
+}
+
+.vt-search-clear {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+
+  ion-icon {
+    font-size: 1.1rem;
+    color: $ink-55;
+  }
+
+  &:active ion-icon {
+    color: $ink;
+  }
+}
+
+// ═══════════════════════════════════════════════
+// CHIPS DE FILTRO
+// ═══════════════════════════════════════════════
+.vt-chips {
+  position: fixed;
+  top: calc(#{$topbar-h} + env(safe-area-inset-top, 0px) + 74px);
+  left: 0;
+  right: 0;
+  z-index: 140;
+  display: flex;
+  gap: 8px;
+  padding: 0 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.vt-chip {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 14px;
+  border-radius: $r-pill;
+  border: none;
+  background: $white;
+  font-family: $font;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: $ink-55;
+  box-shadow: 0 2px 10px rgba(26, 26, 46, 0.10);
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.15s ease;
+
+  ion-icon {
+    font-size: 0.9rem;
+  }
+
+  &:active {
+    transform: scale(0.94);
+  }
+
+  &.active {
+    background: $blue-dark;
+    color: $white;
+    box-shadow: 0 4px 14px rgba(112, 150, 209, 0.40);
+
+    ion-icon {
+      color: $white;
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════
+// BOTTOM SHEET
+// ═══════════════════════════════════════════════
+.vt-sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 72px; // espacio para navbar
+  z-index: 160;
+  background: $bg;
+  border-radius: 26px 26px 0 0;
+  box-shadow: 0 -4px 30px rgba(26, 26, 46, 0.12);
+
+  // Altura colapsada — solo muestra handle + header + 1.5 tarjetas
+  max-height: 200px;
+  transition: max-height 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+
+  &.is-expanded {
+    max-height: 70vh;
+  }
+
+  animation: sheetIn 0.40s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes sheetIn {
+  from {
+    transform: translateY(60px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+// Handle + cabecera — zona de tap
+.vt-sheet-handle-zone {
+  padding: 10px 20px 6px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.vt-handle {
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: $ink-20;
+  margin-bottom: 10px;
+}
+
+.vt-sheet-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.vt-sheet-title {
+  font-family: $font;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: $ink;
+  letter-spacing: -0.01em;
+}
+
+.vt-sheet-chevron {
+  font-size: 1rem;
+  color: $ink-55;
+  transition: transform 0.30s ease;
+
+  .is-expanded & {
+    transform: rotate(180deg);
+  }
+}
+
+// Lista — scroll interno cuando está expandido
+.vt-list {
+  overflow-y: auto;
+  max-height: calc(70vh - 80px);
+  padding: 4px 16px 20px;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+// ═══════════════════════════════════════════════
+// TARJETA DE VETERINARIA
+// ═══════════════════════════════════════════════
+.vt-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: $r-card;
+  background: $white;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 8px rgba(26, 26, 46, 0.06);
+  cursor: pointer;
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.18s ease;
+  animation: cardIn 0.32s ease both;
+
+  &:active {
+    transform: scale(0.97);
+    box-shadow: 0 1px 4px rgba(26, 26, 46, 0.06);
+  }
+
+  &.is-selected {
+    box-shadow: 0 0 0 2px $blue-dark, 0 4px 16px rgba(112, 150, 209, 0.20);
+  }
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.vt-card-avatar {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ion-icon {
+    font-size: 1.3rem;
+    color: $ink;
+  }
+}
+
+.vt-card-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.vt-card-name {
+  margin: 0 0 2px;
+  font-family: $font;
+  font-size: 0.90rem;
+  font-weight: 700;
+  color: $ink;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vt-card-address {
+  margin: 0 0 6px;
+  font-size: 0.76rem;
+  color: $ink-55;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vt-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+// ── Badges ───────────────────────────────────────────────
+.vt-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 8px;
+  border-radius: $r-pill;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+
+  ion-icon {
+    font-size: 0.7rem;
+  }
+
+  &--dist {
+    background: $blue-light;
+    color: $blue-dark;
+  }
+
+  &--open {
+    background: $lime;
+    color: #3a5c14;
+  }
+
+  &--closed {
+    background: $rose;
+    color: #8c2020;
+  }
+}
+
+// CTA flecha
+.vt-card-cta {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: none;
+  background: $bg;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+
+  ion-icon {
+    font-size: 0.95rem;
+    color: $ink;
+  }
+
+  &:active {
+    background: $blue-light;
+    transform: scale(0.90);
+  }
+}
+
+// ═══════════════════════════════════════════════
+// VACÍO
+// ═══════════════════════════════════════════════
+.vt-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 16px;
+  gap: 8px;
+
+  p {
+    margin: 0;
+    font-size: 0.88rem;
+    color: $ink-55;
+    text-align: center;
+  }
+}
+
+.vt-empty-icon {
+  font-size: 2.4rem;
+  color: $ink-20;
+}
+
+.vt-btn-ghost {
+  margin-top: 4px;
+  padding: 10px 24px;
+  border-radius: $r-pill;
+  border: 1.5px solid $blue-dark;
+  background: transparent;
+  color: $blue-dark;
+  font-family: $font;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:active {
+    background: $blue-light;
+  }
+}
+
+// ═══════════════════════════════════════════════
+// SKELETONS
+// ═══════════════════════════════════════════════
+.vt-sk-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: $r-card;
+  background: $white;
+  margin-bottom: 8px;
+}
+
+.vt-sk-avatar {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  background: $ink-09;
+  animation: skFade 1.8s ease-in-out infinite;
+}
+
+.vt-sk-lines {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.vt-sk-line {
+  border-radius: 4px;
+  background: $ink-09;
+  animation: skFade 1.8s ease-in-out infinite 0.15s;
+
+  &--title {
+    height: 13px;
+    width: 65%;
+  }
+
+  &--sub {
+    height: 10px;
+    width: 45%;
+  }
+}
+
+@keyframes skFade {
+
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+
+  50% {
+    opacity: 0.85;
+  }
+}
+
+// ═══════════════════════════════════════════════
+// ACCESIBILIDAD
+// ═══════════════════════════════════════════════
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
