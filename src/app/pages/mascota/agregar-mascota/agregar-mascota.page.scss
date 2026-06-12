@@ -1,197 +1,450 @@
-ion-toolbar {
-  --background: #b8c8f0;
-  --color: #1a1a2e;
+// ═══════════════════════════════════════════════
+// TOKENS
+// ═══════════════════════════════════════════════
+$blue-dark  : #7096D1;
+$blue-mid   : #B8C8F0;
+$blue-light : #D6E3F8;
 
-  ion-title {
-    font-weight: 700;
+$amber      : #F9B74E;
+$amber-soft : rgba(249,183,78,0.28);
+
+$sky        : #C0DCFB;
+$lime       : #E4F2A4;
+$rose       : #F8C4C4;
+
+$ink        : #1A1A2E;
+$ink-55     : rgba(26,26,46,0.55);
+$ink-20     : rgba(26,26,46,0.20);
+$ink-09     : rgba(26,26,46,0.09);
+
+$white      : #FFFFFF;
+$bg         : #FFFFFF;
+$topbar-h   : 56px;
+$r-card     : 20px;
+$r-pill     : 100px;
+
+$font: -apple-system, 'SF Pro Display', 'Helvetica Neue', system-ui, sans-serif;
+
+// ═══════════════════════════════════════════════
+// TOPBAR
+// ═══════════════════════════════════════════════
+.am-topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  height: $topbar-h;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  padding-top: env(safe-area-inset-top, 0);
+  background: $blue-dark;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.10),
+              0 2px 12px rgba(26,26,46,0.14);
+}
+
+.am-topbar-btn {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+
+  ion-icon {
+    font-size: 1.2rem;
+    color: $white;
+    pointer-events: none;
   }
 
-  ion-back-button {
-    --color: #1a1a2e;
+  &:active {
+    background: rgba(255,255,255,0.28);
+    transform: scale(0.90);
   }
 }
 
-ion-content {
-  --background: #f5f5c8;
-  --padding-top: 24px;
-  --padding-start: 20px;
-  --padding-end: 20px;
-  --padding-bottom: 100px;
+.am-brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
 }
 
-.form-body {
+.am-brand-paw {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.80);
+}
+
+.am-brand-name {
+  font-family: $font;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: $white;
+}
+
+// ═══════════════════════════════════════════════
+// CONTENT
+// ═══════════════════════════════════════════════
+ion-content.am-content {
+  --background: #{$white};
+  --padding-top: #{$topbar-h};
+  --padding-bottom: 0;
+}
+
+// ═══════════════════════════════════════════════
+// HERO BAND
+// ═══════════════════════════════════════════════
+.am-hero {
+  background: $white;
+  padding: 22px 20px 20px;
+}
+
+.am-hero-eyebrow {
+  display: block;
+  font-family: $font;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: $ink-55;
+  margin-bottom: 7px;
+}
+
+.am-hero-title {
+  margin: 0;
+  font-family: $font;
+  font-size: 1.95rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: $ink;
+  line-height: 1;
+}
+
+// ═══════════════════════════════════════════════
+// BODY  — sin efecto sheet, plano blanco
+// ═══════════════════════════════════════════════
+.am-body {
+  background: $white;
+  padding: 0 18px 160px;
+  animation: contentIn 0.38s ease both;
+}
+
+// ocultar el handle (ya no aplica sin sheet)
+.am-handle { display: none; }
+
+@keyframes contentIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+// ═══════════════════════════════════════════════
+// FORMULARIO
+// ═══════════════════════════════════════════════
+.am-form {
   display: flex;
   flex-direction: column;
   gap: 18px;
 }
 
-.field {
+// ── Campo genérico ────────────────────────────
+.am-field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-
-  label {
-    font-weight: 700;
-    font-size: .95rem;
-    color: #1a1a2e;
-  }
-
-  input {
-    width: 100%;
-    box-sizing: border-box;
-    border: 1.5px solid #1a1a2e;
-    border-radius: 6px;
-    padding: 8px 10px;
-    font-size: .95rem;
-    outline: none;
-    background: #fff;
-    color: #1a1a2e;
-    transition: border-color .2s;
-
-    &:focus {
-      border-color: #7a9de0;
-    }
-  }
+  gap: 7px;
 }
 
-.field-row {
-  display: flex;
-  gap: 20px;
-  align-items: flex-end;
+.am-label {
+  font-family: $font;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: $ink-55;
 }
 
-.field-inline {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  label {
-    font-weight: 700;
-    font-size: .95rem;
-    color: #1a1a2e;
-    white-space: nowrap;
-  }
-}
-
-.input-unit-wrap {
-  display: flex;
-  align-items: center;
-  border: 1.5px solid #1a1a2e;
-  border-radius: 6px;
-  background: #fff;
-  overflow: hidden;
-
-  input {
-    border: none;
-    width: 56px;
-    padding: 8px 6px;
-    font-size: .9rem;
-    outline: none;
-    background: transparent;
-    color: #1a1a2e;
-    text-align: center;
-    -moz-appearance: textfield;
-
-    &::-webkit-outer-spin-button,
-    &::-webkit-inner-spin-button {
-      -webkit-appearance: auto;
-    }
-  }
-
-  .unit {
-    font-size: .8rem;
-    color: #555;
-    padding-right: 6px;
-  }
-}
-
-.toggle-group {
-  display: flex;
-  border: 1.5px solid #1a1a2e;
-  border-radius: 8px;
-  overflow: hidden;
-  width: fit-content;
-}
-
-.toggle-btn {
-  padding: 8px 28px;
-  font-size: .95rem;
+.am-input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1.5px solid $ink-20;
+  border-radius: 14px;
+  padding: 13px 16px;
+  font-family: $font;
+  font-size: 0.97rem;
   font-weight: 500;
+  outline: none;
+  background: $white;
+  color: $ink;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &::placeholder {
+    color: rgba(26,26,46,0.28);
+  }
+
+  &:focus {
+    border-color: $blue-dark;
+    box-shadow: 0 0 0 3px rgba(112,150,209,0.18);
+  }
+}
+
+// ── Stat cards editables ──────────────────────
+.am-stats-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.am-stat-card {
+  border-radius: $r-card;
+  padding: 14px 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.16s ease;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -18px; right: -18px;
+    width: 68px; height: 68px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.24);
+    pointer-events: none;
+  }
+
+  &:active { transform: scale(0.97); }
+
+  &.am-stat--amber { background: $amber; }
+  &.am-stat--sky   { background: $sky;   }
+}
+
+.am-stat-label {
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: $ink-55;
+}
+
+.am-stat-input-row {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.am-stat-input {
+  background: rgba(255,255,255,0.55);
+  border: 1.5px solid rgba(26,26,46,0.18);
+  border-radius: 10px;
+  width: 68px;
+  padding: 6px 8px;
+  font-family: $font;
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: $ink;
+  text-align: center;
+  outline: none;
+  -moz-appearance: textfield;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+
+  &:focus {
+    border-color: rgba(26,26,46,0.45);
+    background: rgba(255,255,255,0.80);
+  }
+}
+
+.am-stat-unit {
+  font-size: 0.80rem;
+  font-weight: 600;
+  color: $ink-55;
+}
+
+// ── Toggle Sexo ───────────────────────────────
+.am-toggle-track {
+  display: flex;
+  background: $ink-09;
+  border-radius: $r-pill;
+  padding: 3px;
+}
+
+.am-toggle-pill {
+  flex: 1;
+  padding: 10px;
   border: none;
-  background: #fff;
-  color: #1a1a2e;
+  border-radius: $r-pill;
+  font-family: $font;
+  font-size: 0.90rem;
+  font-weight: 600;
+  color: $ink-55;
+  background: transparent;
   cursor: pointer;
-  transition: background .2s, color .2s;
+  transition: background  0.22s cubic-bezier(0.34,1.56,0.64,1),
+              color       0.18s ease,
+              transform   0.18s cubic-bezier(0.34,1.56,0.64,1);
 
   &.active {
-    background: #b8c8f0;
+    background: $ink;
+    color: $white;
     font-weight: 700;
-  }
-
-  &+& {
-    border-left: 1.5px solid #1a1a2e;
+    transform: scale(1.02);
   }
 }
 
-// --- Datepicker ---
-
-.fecha-wrap {
+// ── Fecha ─────────────────────────────────────
+.am-fecha-wrap {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border: 1.5px solid #1a1a2e;
-  border-radius: 6px;
-  background: #fff;
-  padding: 8px 10px;
+  border: 1.5px solid $ink-20;
+  border-radius: 14px;
+  background: $white;
+  padding: 12px 12px 12px 16px;
+  transition: border-color 0.2s ease;
 }
 
-.fecha-texto {
-  font-size: .95rem;
-  color: #888;
+.am-fecha-texto {
+  font-family: $font;
+  font-size: 0.97rem;
+  font-weight: 500;
+  color: rgba(26,26,46,0.35);
 }
 
-.dt-btn {
+.am-dt-btn {
   --padding-start: 0;
   --padding-end: 0;
 
   &::part(native) {
-    background: transparent;
-    padding: 0;
+    background: $amber;
+    border-radius: 10px;
+    padding: 6px 10px;
   }
 
   ion-icon {
-    font-size: 1.2rem;
-    color: #555;
+    font-size: 1.15rem;
+    color: $ink;
   }
 }
 
-.dt-modal {
+.am-dt-modal {
   --width: 320px;
   --height: auto;
-  --border-radius: 16px;
+  --border-radius: 20px;
 
   ion-datetime {
-    --background: #fff;
-    --ion-color-primary: #7a9de0;
+    --background: #{$white};
+    --ion-color-primary: #{$blue-dark};
   }
 }
 
-// --- Footer ---
-
-.footer {
+// ═══════════════════════════════════════════════
+// FOOTER + BOTÓN GUARDAR
+// ═══════════════════════════════════════════════
+.am-footer {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  bottom: 0; left: 0; right: 0;
   padding: 16px 20px;
-  background: #f5f5c8;
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0));
+  background: linear-gradient(to top, $white 70%, transparent);
 }
 
-.btn-guardar {
-  --background: #b8c8f0;
-  --background-activated: #9ab0e0;
-  --color: #1a1a2e;
-  --border-radius: 50px;
-  --box-shadow: none;
-  font-weight: 600;
+.am-btn-guardar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 15px 10px;
+  border-radius: $r-pill;
+  font-family: $font;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  border: none;
+  cursor: pointer;
+  background: $amber;
+  color: $ink;
+  box-shadow: 0 6px 18px $amber-soft;
+  transition: transform   0.18s cubic-bezier(0.34,1.56,0.64,1),
+              box-shadow  0.18s ease,
+              opacity     0.14s ease;
+
+  &:active {
+    transform: scale(0.97);
+    box-shadow: 0 2px 8px $amber-soft;
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    pointer-events: none;
+  }
+
+  ion-spinner {
+    --color: #{$ink};
+  }
+}
+
+// ═══════════════════════════════════════════════
+// ACCESIBILIDAD
+// ═══════════════════════════════════════════════
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+// ── Fecha — partes visuales ───────────────────
+.am-fecha-wrap--filled {
+  border-color: $blue-dark;
+}
+
+.am-fecha-partes {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+
+  &--placeholder .am-fecha-parte {
+    color: rgba(26,26,46,0.28);
+    font-weight: 500;
+  }
+}
+
+.am-fecha-parte {
+  font-family: $font;
+  font-weight: 700;
+  color: $ink;
+}
+
+.am-fecha-dia  { font-size: 1.45rem; letter-spacing: -0.02em; }
+.am-fecha-mes  {
+  font-size: 0.80rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $blue-dark;
+  padding: 2px 6px;
+  background: $blue-light;
+  border-radius: 6px;
+  align-self: center;
+}
+.am-fecha-anio { font-size: 1.1rem; color: $ink-55; letter-spacing: -0.01em; }
+
+.am-fecha-sep {
+  font-size: 1rem;
+  font-weight: 400;
+  color: $ink-20;
+  margin: 0 1px;
 }

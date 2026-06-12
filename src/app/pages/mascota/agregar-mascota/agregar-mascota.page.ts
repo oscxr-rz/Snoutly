@@ -1,16 +1,20 @@
-import { Component, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
-  IonContent, IonHeader, IonTitle, IonToolbar, IonButtons,
-  IonBackButton, IonButton, IonIcon, IonSpinner,
+  IonContent, IonIcon, IonSpinner,
   IonDatetime, IonDatetimeButton, IonModal,
-  AlertController
+  AlertController, NavController
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { calendarOutline } from 'ionicons/icons';
+import {
+  chevronBackOutline,
+  pawOutline,
+  calendarOutline
+} from 'ionicons/icons';
 import { MascotaService } from 'src/app/core/services/mascota/mascota.service';
-import { SlicePipe } from '@angular/common';
+import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
+
+const MESES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
 
 @Component({
   selector: 'app-agregar-mascota',
@@ -19,59 +23,105 @@ import { SlicePipe } from '@angular/common';
   standalone: true,
   imports: [
     FormsModule,
-    IonContent, IonHeader, IonTitle, IonToolbar,
-    IonButtons, IonBackButton, IonButton, IonIcon, IonSpinner,
-    IonDatetime, IonDatetimeButton, IonModal, SlicePipe
+    IonContent, IonIcon, IonSpinner,
+    IonDatetime, IonDatetimeButton, IonModal,
+    NavbarComponent
   ]
 })
 export class AgregarMascotaPage {
-  nombre = signal('');
-  raza = signal('');
-  peso = signal<number>(0);
-  altura = signal<number>(0);
-  sexo = signal<'macho' | 'hembra'>('macho');
+
+  // ── Signals de formulario ────────────────────
+  nombre          = signal('');
+  raza            = signal('');
+  peso            = signal<number>(0);
+  altura          = signal<number>(0);
+  sexo            = signal<'macho' | 'hembra'>('macho');
   fechaNacimiento = signal<string | null>(null);
-  loading = signal(false);
+  loading         = signal(false);
+
   readonly today = new Date().toISOString();
 
+  // ── Partes formateadas de la fecha ───────────
+  readonly fechaPartes = computed(() => {
+    const iso = this.fechaNacimiento();
+    if (!iso) return { dia: '', mes: '', anio: '' };
+    const d = new Date(iso);
+    return {
+      dia : String(d.getUTCDate()).padStart(2, '0'),
+      mes : MESES[d.getUTCMonth()],
+      anio: String(d.getUTCFullYear())
+    };
+  });
+
+  // ── Dependencias ─────────────────────────────
   private readonly mascotaService = inject(MascotaService);
-  private readonly router = inject(Router);
-  private readonly alertCtrl = inject(AlertController);
+  private readonly navCtrl        = inject(NavController);
+  private readonly alertCtrl      = inject(AlertController);
 
   constructor() {
-    addIcons({ calendarOutline });
+    addIcons({ chevronBackOutline, pawOutline, calendarOutline });
   }
 
-  onFechaChange(event: any): void {
+  // ── Navegación ───────────────────────────────
+  goBack(): void {
+    this.navCtrl.back();
+  }
+
+  // ── Fecha ────────────────────────────────────
+  onFechaChange(event: CustomEvent): void {
     this.fechaNacimiento.set(event.detail.value ?? null);
   }
 
+  // ── Validación ───────────────────────────────
   private get formValido(): boolean {
-    return !!(this.nombre().trim() && this.raza().trim() && this.peso() > 0 && this.altura() > 0);
+    return !!(
+      this.nombre().trim() &&
+      this.raza().trim()   &&
+      this.peso()   > 0    &&
+      this.altura() > 0
+    );
   }
 
+  // ── Guardar ──────────────────────────────────
   async onGuardar(): Promise<void> {
-    if (!this.formValido) return;
+    if (!this.formValido) {
+      await this.mostrarAlertaValidacion();
+      return;
+    }
+
     this.loading.set(true);
 
     this.mascotaService.agregarMascota({
-      nombre: this.nombre(),
-      raza: this.raza(),
-      peso: this.peso(),
-      altura: this.altura(),
-      sexo: this.sexo(),
+      nombre          : this.nombre(),
+      raza            : this.raza(),
+      peso            : this.peso(),
+      altura          : this.altura(),
+      sexo            : this.sexo(),
       fecha_nacimiento: this.fechaNacimiento()
     }).subscribe({
-      next: () => this.router.navigate(['/']),
+      next: () => {
+        this.loading.set(false);
+        this.navCtrl.back();
+      },
       error: async (err) => {
         this.loading.set(false);
         const alert = await this.alertCtrl.create({
-          header: 'Error',
-          message: err?.error?.message ?? 'Error al registrar la mascota',
+          header : 'Error al guardar',
+          message: err?.error?.message ?? 'No se pudo registrar la mascota. Intenta de nuevo.',
           buttons: ['OK']
         });
         await alert.present();
       }
     });
+  }
+
+  // ── Alerta campos incompletos ────────────────
+  private async mostrarAlertaValidacion(): Promise<void> {
+    const alert = await this.alertCtrl.create({
+      header : 'Campos incompletos',
+      message: 'Por favor completa el nombre, raza, peso y altura.',
+      buttons: ['Entendido']
+    });
+    await alert.present();
   }
 }

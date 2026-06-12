@@ -1,78 +1,179 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home" />
-    </ion-buttons>
-    <ion-title>Formulario</ion-title>
-  </ion-toolbar>
-</ion-header>
+<!-- ══════════════════════════════════════════════════
+     TOPBAR
+     ══════════════════════════════════════════════════ -->
+<div class="am-topbar">
+  <button class="am-topbar-btn" (click)="goBack()" aria-label="Regresar">
+    <ion-icon name="chevron-back-outline" />
+  </button>
 
-<ion-content>
-  <div class="form-body">
-
-    <div class="field">
-      <label>Nombre:</label>
-      <input type="text" [ngModel]="nombre()" (ngModelChange)="nombre.set($event)" autocomplete="off" />
-    </div>
-
-    <div class="field">
-      <label>Raza:</label>
-      <input type="text" [ngModel]="raza()" (ngModelChange)="raza.set($event)" autocomplete="off" />
-    </div>
-
-    <div class="field-row">
-      <div class="field-inline">
-        <label>Peso:</label>
-        <div class="input-unit-wrap">
-          <input type="number" min="0" step="0.1" [ngModel]="peso()" (ngModelChange)="peso.set(+$event)" />
-          <span class="unit">kg</span>
-        </div>
-      </div>
-      <div class="field-inline">
-        <label>Altura:</label>
-        <div class="input-unit-wrap">
-          <input type="number" min="0" step="1" [ngModel]="altura()" (ngModelChange)="altura.set(+$event)" />
-          <span class="unit">cm</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="field">
-      <label>Sexo:</label>
-      <div class="toggle-group">
-        <button class="toggle-btn" [class.active]="sexo() === 'macho'" (click)="sexo.set('macho')">Macho</button>
-        <button class="toggle-btn" [class.active]="sexo() === 'hembra'" (click)="sexo.set('hembra')">Hembra</button>
-      </div>
-    </div>
-
-    <div class="field">
-      <label>Fecha de nacimiento:</label>
-      <div class="fecha-wrap">
-        <span class="fecha-texto">
-          {{ fechaNacimiento() ? (fechaNacimiento() | slice:0:10) : 'Día / Mes / Año' }}
-        </span>
-        <ion-datetime-button datetime="dtNacimiento" class="dt-btn">
-          <ion-icon slot="date-target" name="calendar-outline" />
-        </ion-datetime-button>
-      </div>
-
-      <ion-modal [keepContentsMounted]="true" class="dt-modal">
-        <ng-template>
-          <ion-datetime id="dtNacimiento" presentation="date" locale="es-MX" [max]="today"
-            (ionChange)="onFechaChange($event)" showDefaultButtons="true" doneText="Aceptar" cancelText="Cancelar" />
-        </ng-template>
-      </ion-modal>
-    </div>
-
+  <div class="am-brand">
+    <ion-icon name="paw-outline" class="am-brand-paw" />
+    <span class="am-brand-name">Snoutly</span>
   </div>
 
-  <div class="footer">
-    <ion-button expand="block" class="btn-guardar" [disabled]="loading()" (click)="onGuardar()">
+  <div style="width:36px"></div>
+</div>
+
+<ion-content [fullscreen]="true" class="am-content">
+
+  <!-- ══════════════════════════════════════════════════
+       HERO BAND
+       ══════════════════════════════════════════════════ -->
+  <div class="am-hero">
+    <span class="am-hero-eyebrow">Registro</span>
+    <h1 class="am-hero-title">Agrega una mascota</h1>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       BODY
+       ══════════════════════════════════════════════════ -->
+  <div class="am-body">
+    <div class="am-handle"></div>
+
+    <div class="am-form">
+
+      <!-- Nombre -->
+      <div class="am-field">
+        <label class="am-label">Nombre</label>
+        <input
+          class="am-input"
+          type="text"
+          [ngModel]="nombre()"
+          (ngModelChange)="nombre.set($event)"
+          placeholder="Ej. Luna"
+          autocomplete="off"
+        />
+      </div>
+
+      <!-- Raza -->
+      <div class="am-field">
+        <label class="am-label">Raza</label>
+        <input
+          class="am-input"
+          type="text"
+          [ngModel]="raza()"
+          (ngModelChange)="raza.set($event)"
+          placeholder="Ej. Golden Retriever"
+          autocomplete="off"
+        />
+      </div>
+
+      <!-- Peso + Altura como stat cards editables -->
+      <div class="am-stats-row">
+        <div class="am-stat-card am-stat--amber">
+          <span class="am-stat-label">Peso</span>
+          <div class="am-stat-input-row">
+            <input
+              class="am-stat-input"
+              type="number"
+              min="0"
+              step="0.1"
+              [ngModel]="peso()"
+              (ngModelChange)="peso.set(+$event)"
+            />
+            <span class="am-stat-unit">kg</span>
+          </div>
+        </div>
+
+        <div class="am-stat-card am-stat--sky">
+          <span class="am-stat-label">Altura</span>
+          <div class="am-stat-input-row">
+            <input
+              class="am-stat-input"
+              type="number"
+              min="0"
+              step="1"
+              [ngModel]="altura()"
+              (ngModelChange)="altura.set(+$event)"
+            />
+            <span class="am-stat-unit">cm</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sexo toggle pill -->
+      <div class="am-field">
+        <label class="am-label">Sexo</label>
+        <div class="am-toggle-track">
+          <button
+            class="am-toggle-pill"
+            [class.active]="sexo() === 'macho'"
+            (click)="sexo.set('macho')"
+          >Macho</button>
+          <button
+            class="am-toggle-pill"
+            [class.active]="sexo() === 'hembra'"
+            (click)="sexo.set('hembra')"
+          >Hembra</button>
+        </div>
+      </div>
+
+      <!-- Fecha de nacimiento -->
+      <div class="am-field">
+        <label class="am-label">Fecha de nacimiento</label>
+
+        <div class="am-fecha-wrap" [class.am-fecha-wrap--filled]="fechaNacimiento()">
+
+          <!-- partes de la fecha separadas -->
+          @if (fechaNacimiento()) {
+            <div class="am-fecha-partes">
+              <span class="am-fecha-parte am-fecha-dia">{{ fechaPartes().dia }}</span>
+              <span class="am-fecha-sep">/</span>
+              <span class="am-fecha-parte am-fecha-mes">{{ fechaPartes().mes }}</span>
+              <span class="am-fecha-sep">/</span>
+              <span class="am-fecha-parte am-fecha-anio">{{ fechaPartes().anio }}</span>
+            </div>
+          } @else {
+            <div class="am-fecha-partes am-fecha-partes--placeholder">
+              <span class="am-fecha-parte">DD</span>
+              <span class="am-fecha-sep">/</span>
+              <span class="am-fecha-parte">MMM</span>
+              <span class="am-fecha-sep">/</span>
+              <span class="am-fecha-parte">AAAA</span>
+            </div>
+          }
+
+          <ion-datetime-button datetime="dtNacimiento" class="am-dt-btn">
+            <ion-icon slot="date-target" name="calendar-outline" />
+          </ion-datetime-button>
+        </div>
+
+        <ion-modal [keepContentsMounted]="true" class="am-dt-modal">
+          <ng-template>
+            <ion-datetime
+              id="dtNacimiento"
+              presentation="date"
+              locale="es-MX"
+              [max]="today"
+              (ionChange)="onFechaChange($event)"
+              showDefaultButtons="true"
+              doneText="Aceptar"
+              cancelText="Cancelar"
+            />
+          </ng-template>
+        </ion-modal>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       FOOTER
+       ══════════════════════════════════════════════════ -->
+  <div class="am-footer">
+    <button
+      class="am-btn-guardar"
+      [disabled]="loading()"
+      (click)="onGuardar()"
+    >
       @if (loading()) {
-      <ion-spinner name="crescent" />
+        <ion-spinner name="crescent" />
       } @else {
-      Guardar
+        Guardar
       }
-    </ion-button>
+    </button>
   </div>
+
 </ion-content>
+
+<app-navbar />
