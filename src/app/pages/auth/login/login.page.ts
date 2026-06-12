@@ -1,12 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import {
-  IonContent, IonHeader, IonTitle, IonToolbar,
-  IonButton, IonIcon, IonSpinner, AlertController
+  IonContent, IonIcon, IonSpinner,
+  AlertController
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { eyeOutline, eyeOffOutline } from 'ionicons/icons';
+import { eyeOutline, eyeOffOutline, pawOutline } from 'ionicons/icons';
 import { AuthService } from 'src/app/core/services/auth/auth.service';
 
 @Component({
@@ -16,44 +16,62 @@ import { AuthService } from 'src/app/core/services/auth/auth.service';
   standalone: true,
   imports: [
     FormsModule,
-    IonContent, IonHeader, IonTitle, IonToolbar,
-    IonButton, IonIcon, IonSpinner
+    IonContent, IonIcon, IonSpinner
   ]
 })
 export class LoginPage {
-  correo = signal('');
-  password = signal('');
-  showPassword = signal(false);
-  loading = signal(false);
 
+  // ── Signals de formulario ────────────────────
+  correo       = signal('');
+  password     = signal('');
+  showPassword = signal(false);
+  loading      = signal(false);
+
+  // ── Dependencias ─────────────────────────────
   private readonly authService = inject(AuthService);
-  private readonly router = inject(Router);
-  private readonly alertCtrl = inject(AlertController);
+  private readonly router      = inject(Router);
+  private readonly alertCtrl   = inject(AlertController);
 
   constructor() {
-    addIcons({ eyeOutline, eyeOffOutline });
+    addIcons({ eyeOutline, eyeOffOutline, pawOutline });
   }
 
-  get passwordType() { return this.showPassword() ? 'text' : 'password'; }
+  get passwordType() {
+    return this.showPassword() ? 'text' : 'password';
+  }
 
+  // ── Validación ───────────────────────────────
   private get formValido(): boolean {
     return !!(this.correo().trim() && this.password().length >= 6);
   }
 
+  // ── Submit ───────────────────────────────────
   async onSubmit(): Promise<void> {
-    if (!this.formValido) return;
+    if (!this.formValido) {
+      const alert = await this.alertCtrl.create({
+        header : 'Campos incompletos',
+        message: 'Ingresa un correo válido y una contraseña de al menos 6 caracteres.',
+        buttons: ['Entendido']
+      });
+      await alert.present();
+      return;
+    }
+
     this.loading.set(true);
 
     this.authService.login({
       correo_electronico: this.correo(),
-      password: this.password()
+      password          : this.password()
     }).subscribe({
-      next: () => this.router.navigate(['/']),
+      next: () => {
+        this.loading.set(false);
+        this.router.navigate(['/']);
+      },
       error: async (err) => {
         this.loading.set(false);
         const alert = await this.alertCtrl.create({
-          header: 'Error',
-          message: err?.error?.message ?? 'Credenciales inválidas',
+          header : 'Error al iniciar sesión',
+          message: err?.error?.message ?? 'Credenciales inválidas. Intenta de nuevo.',
           buttons: ['OK']
         });
         await alert.present();
@@ -61,7 +79,8 @@ export class LoginPage {
     });
   }
 
-  crearCuenta() {
+  // ── Registro ─────────────────────────────────
+  crearCuenta(): void {
     this.router.navigate(['auth/register']);
   }
 }

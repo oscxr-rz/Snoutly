@@ -1,39 +1,82 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar>
-    <ion-title>Iniciar sesión</ion-title>
-  </ion-toolbar>
-</ion-header>
+<!-- ══════════════════════════════════════════════════
+     TOPBAR
+     ══════════════════════════════════════════════════ -->
+<div class="lg-topbar">
+  <div class="lg-brand">
+    <ion-icon name="paw-outline" class="lg-brand-paw" />
+    <span class="lg-brand-name">Snoutly</span>
+  </div>
+</div>
 
-<ion-content>
-  <div class="form-card">
+<ion-content [fullscreen]="true" class="lg-content">
 
-    <div class="field">
-      <label>Correo electrónico:</label>
-      <input type="email" [ngModel]="correo()" (ngModelChange)="correo.set($event)" autocomplete="email" />
-    </div>
+  <!-- ══════════════════════════════════════════════════
+       HERO BAND
+       ══════════════════════════════════════════════════ -->
+  <div class="lg-hero">
+    <span class="lg-hero-eyebrow">Bienvenido</span>
+    <h1 class="lg-hero-title">Iniciar sesión</h1>
+  </div>
 
-    <div class="field">
-      <label>Contraseña:</label>
-      <div class="input-icon-wrap">
-        <input [type]="passwordType" [ngModel]="password()" (ngModelChange)="password.set($event)"
-          autocomplete="current-password" />
-        <button class="icon-btn" (click)="showPassword.set(!showPassword())">
-          <ion-icon [name]="showPassword() ? 'eye-outline' : 'eye-off-outline'" />
-        </button>
+  <!-- ══════════════════════════════════════════════════
+       BODY
+       ══════════════════════════════════════════════════ -->
+  <div class="lg-body">
+
+    <div class="lg-form">
+
+      <!-- Correo -->
+      <div class="lg-field">
+        <label class="lg-label">Correo electrónico</label>
+        <input
+          class="lg-input"
+          type="email"
+          [ngModel]="correo()"
+          (ngModelChange)="correo.set($event)"
+          placeholder="Ej. usuario@correo.com"
+          autocomplete="email"
+        />
       </div>
+
+      <!-- Contraseña -->
+      <div class="lg-field">
+        <label class="lg-label">Contraseña</label>
+        <div class="lg-input-wrap">
+          <input
+            class="lg-input"
+            [type]="passwordType"
+            [ngModel]="password()"
+            (ngModelChange)="password.set($event)"
+            placeholder="Mínimo 6 caracteres"
+            autocomplete="current-password"
+          />
+          <button class="lg-eye-btn" (click)="showPassword.set(!showPassword())" type="button">
+            <ion-icon [name]="showPassword() ? 'eye-outline' : 'eye-off-outline'" />
+          </button>
+        </div>
+      </div>
+
+      <!-- Botón -->
+      <button
+        class="lg-btn-submit"
+        [disabled]="loading()"
+        (click)="onSubmit()"
+      >
+        @if (loading()) {
+          <ion-spinner name="crescent" />
+        } @else {
+          Siguiente
+        }
+      </button>
+
     </div>
 
-    <ion-button expand="block" class="btn-siguiente" [disabled]="loading()" (click)="onSubmit()">
-      @if (loading()) {
-      <ion-spinner name="crescent" />
-      } @else {
-      Siguiente
-      }
-    </ion-button>
+    <!-- Link registro -->
+    <p class="lg-register-link">
+      ¿No tienes una cuenta aún?
+      <a (click)="crearCuenta()">Crear cuenta</a>
+    </p>
 
   </div>
 
-  <p class="register-link">
-    ¿No tienes una cuenta aún? <a (click)="crearCuenta()">Crear cuenta</a>
-  </p>
 </ion-content>

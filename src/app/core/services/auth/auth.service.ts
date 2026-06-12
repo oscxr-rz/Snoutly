@@ -39,7 +39,7 @@ export class AuthService {
   }
 
   estaAutenticado(): boolean {
-    return !!localStorage.getItem('token');
+    return !!localStorage.getItem('token') && !!localStorage.getItem('id_usuario');
   }
 
   private guardarDatos(res: any): void {

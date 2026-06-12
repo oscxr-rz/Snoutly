@@ -1,91 +1,259 @@
-ion-toolbar {
-  --background: #b8c8f0;
-  --color: #1a1a2e;
-  ion-title { font-weight: 700; }
-}
+// ═══════════════════════════════════════════════
+// TOKENS  (idénticos al design system)
+// ═══════════════════════════════════════════════
+$blue-dark  : #7096D1;
+$blue-mid   : #B8C8F0;
+$blue-light : #D6E3F8;
 
-ion-content {
-  --background: #f5f5c8;
-  --padding-top: 24px;
-  --padding-start: 20px;
-  --padding-end: 20px;
-  --padding-bottom: 32px;
-}
+$amber      : #F9B74E;
+$amber-soft : rgba(249,183,78,0.28);
 
-.form-card {
-  background: #fff;
-  border-radius: 16px;
-  padding: 24px 20px;
+$ink        : #1A1A2E;
+$ink-55     : rgba(26,26,46,0.55);
+$ink-20     : rgba(26,26,46,0.20);
+$ink-09     : rgba(26,26,46,0.09);
+
+$white      : #FFFFFF;
+$topbar-h   : 56px;
+$r-pill     : 100px;
+
+$font: -apple-system, 'SF Pro Display', 'Helvetica Neue', system-ui, sans-serif;
+
+// ═══════════════════════════════════════════════
+// TOPBAR
+// ═══════════════════════════════════════════════
+.lg-topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  height: $topbar-h;
   display: flex;
-  flex-direction: column;
-  gap: 16px;
-  box-shadow: 0 2px 12px rgba(0,0,0,.06);
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px;
+  padding-top: env(safe-area-inset-top, 0);
+  background: $blue-dark;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.10),
+              0 2px 12px rgba(26,26,46,0.14);
 }
 
-.field {
+.lg-brand {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 6px;
-
-  label {
-    font-weight: 700;
-    font-size: .95rem;
-    color: #1a1a2e;
-  }
-
-  input {
-    width: 100%;
-    box-sizing: border-box;
-    border: 1.5px solid #1a1a2e;
-    border-radius: 6px;
-    padding: 8px 40px 8px 10px;
-    font-size: .95rem;
-    outline: none;
-    background: #fff;
-    color: #1a1a2e;
-    transition: border-color .2s;
-
-    &:focus { border-color: #7a9de0; }
-  }
+  pointer-events: none;
 }
 
-.input-icon-wrap {
+.lg-brand-paw {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.80);
+}
+
+.lg-brand-name {
+  font-family: $font;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: $white;
+}
+
+// ═══════════════════════════════════════════════
+// CONTENT
+// ═══════════════════════════════════════════════
+ion-content.lg-content {
+  --background: #{$white};
+  --padding-top: #{$topbar-h};
+  --padding-bottom: 0;
+}
+
+// ═══════════════════════════════════════════════
+// HERO BAND
+// ═══════════════════════════════════════════════
+.lg-hero {
+  background: $white;
+  padding: 22px 20px 20px;
+}
+
+.lg-hero-eyebrow {
+  display: block;
+  font-family: $font;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: $ink-55;
+  margin-bottom: 7px;
+}
+
+.lg-hero-title {
+  margin: 0;
+  font-family: $font;
+  font-size: 1.95rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: $ink;
+  line-height: 1;
+}
+
+// ═══════════════════════════════════════════════
+// BODY — plano blanco, sin sheet
+// ═══════════════════════════════════════════════
+.lg-body {
+  background: $white;
+  padding: 0 18px 80px;
+  animation: contentIn 0.38s ease both;
+}
+
+@keyframes contentIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+// ═══════════════════════════════════════════════
+// FORMULARIO
+// ═══════════════════════════════════════════════
+.lg-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+// ── Campo genérico ────────────────────────────
+.lg-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.lg-label {
+  font-family: $font;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: $ink-55;
+}
+
+.lg-input-wrap {
   position: relative;
   display: flex;
   align-items: center;
 }
 
-.icon-btn {
+.lg-input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1.5px solid $ink-20;
+  border-radius: 14px;
+  padding: 13px 44px 13px 16px;
+  font-family: $font;
+  font-size: 0.97rem;
+  font-weight: 500;
+  outline: none;
+  background: $white;
+  color: $ink;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &::placeholder {
+    color: rgba(26,26,46,0.28);
+  }
+
+  &:focus {
+    border-color: $blue-dark;
+    box-shadow: 0 0 0 3px rgba(112,150,209,0.18);
+  }
+}
+
+// campo sin icono no necesita padding derecho extra
+.lg-field:not(:has(.lg-input-wrap)) .lg-input {
+  padding-right: 16px;
+}
+
+.lg-eye-btn {
   position: absolute;
-  right: 10px;
+  right: 14px;
   background: none;
   border: none;
   padding: 0;
   cursor: pointer;
-  color: #888;
+  color: $ink-55;
   display: flex;
+  align-items: center;
+  transition: color 0.15s ease;
+
   ion-icon { font-size: 1.2rem; }
+
+  &:active { color: $ink; }
 }
 
-.btn-siguiente {
-  --background: #b8c8f0;
-  --background-activated: #9ab0e0;
-  --color: #1a1a2e;
-  --border-radius: 50px;
-  --box-shadow: none;
-  font-weight: 600;
+// ── Botón submit ──────────────────────────────
+.lg-btn-submit {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 15px 10px;
+  border-radius: $r-pill;
+  font-family: $font;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  border: none;
+  cursor: pointer;
   margin-top: 8px;
+  background: $amber;
+  color: $ink;
+  box-shadow: 0 6px 18px $amber-soft;
+  transition: transform   0.18s cubic-bezier(0.34,1.56,0.64,1),
+              box-shadow  0.18s ease,
+              opacity     0.14s ease;
+
+  &:active {
+    transform: scale(0.97);
+    box-shadow: 0 2px 8px $amber-soft;
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    pointer-events: none;
+  }
+
+  ion-spinner {
+    --color: #{$ink};
+  }
 }
 
-.register-link {
-  margin-top: 20px;
+// ── Link registro ─────────────────────────────
+.lg-register-link {
+  margin-top: 28px;
   text-align: center;
-  font-size: .9rem;
-  color: #555;
+  font-family: $font;
+  font-size: 0.88rem;
+  color: $ink-55;
 
   a {
-    color: #3a6fd8;
-    text-decoration: underline;
-    font-weight: 500;
+    color: $blue-dark;
+    font-weight: 700;
+    text-decoration: none;
+    border-bottom: 1.5px solid $blue-mid;
+    padding-bottom: 1px;
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease;
+
+    &:active {
+      color: $ink;
+      border-color: $ink;
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════
+// ACCESIBILIDAD
+// ═══════════════════════════════════════════════
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
 }

@@ -102,8 +102,8 @@ export class PerfilPage implements OnInit {
 
   private cerrarSesion(): void {
     this.authService.logout().subscribe({
-      next: () => this.router.navigate(['/login'], { replaceUrl: true }),
-      error: () => this.router.navigate(['/login'], { replaceUrl: true })
+      next: () => this.router.navigate(['/auth/login'], { replaceUrl: true }),
+      error: () => this.router.navigate(['/auth/login'], { replaceUrl: true })
     });
   }
 
