@@ -1,113 +1,195 @@
-<!-- TOPBAR -->
+<!-- ══════ TOPBAR ══════ -->
 <div class="vt-topbar">
-  <button class="vt-topbar-btn" (click)="goBack()" aria-label="Volver">
-    <ion-icon name="chevron-back-outline" />
+  <button class="vt-topbar-btn" (click)="goBack()">
+    <ion-icon name="chevron-back-outline"/>
   </button>
   <div class="vt-brand">
-    <ion-icon name="paw-outline" class="vt-brand-paw" />
+    <ion-icon name="paw-outline" class="vt-brand-paw"/>
     <span class="vt-brand-name">Veterinarias</span>
   </div>
-  <button class="vt-topbar-btn" (click)="centrarMapa()" aria-label="Mi ubicación">
-    <ion-icon name="locate-outline" />
+  <button class="vt-topbar-btn" (click)="centrarMapa()">
+    <ion-icon name="locate-outline"/>
   </button>
 </div>
 
 <ion-content [fullscreen]="true" class="vt-content">
 
-  <!-- MAPA A PANTALLA COMPLETA -->
-  <div class="vt-map-wrapper">
-    <div id="vt-map"></div>
-  </div>
+  <!-- ══════ MAPA ══════ -->
+  <div id="vt-map"></div>
 
-  <!-- BARRA DE BÚSQUEDA FLOTANTE -->
-  <div class="vt-search-float" [class.is-focused]="searchFocused()">
-    <ion-icon name="search-outline" class="vt-search-icon" />
-    <input class="vt-search-input" type="text" placeholder="Buscar veterinaria…" [value]="query()"
-      (input)="onSearchInput($event)" (focus)="searchFocused.set(true)" (blur)="searchFocused.set(false)" />
+  <!-- ══════ SEARCH BAR FLOTANTE ══════ -->
+  <div class="vt-search" [class.focused]="searchFocused()">
+    <ion-icon name="search-outline" class="vt-search-ico"/>
+    <input
+      class="vt-search-inp"
+      type="text"
+      placeholder="Buscar veterinaria…"
+      [value]="query()"
+      (input)="onSearchInput($event)"
+      (focus)="searchFocused.set(true)"
+      (blur)="searchFocused.set(false)"
+    />
     @if (query()) {
-    <button class="vt-search-clear" (click)="limpiarBusqueda()" aria-label="Limpiar">
-      <ion-icon name="close-circle-outline" />
-    </button>
+      <button class="vt-search-x" (click)="limpiarBusqueda()">
+        <ion-icon name="close-circle-outline"/>
+      </button>
     }
   </div>
 
-  <!-- CHIPS DE FILTRO -->
+  <!-- ══════ CHIPS DE FILTRO ══════ -->
   <div class="vt-chips">
-    @for (chip of chips; track chip.key) {
-    <button class="vt-chip" [class.active]="filtroActivo() === chip.key" (click)="setFiltro(chip.key)">
-      <ion-icon [name]="chip.icon" />
-      {{ chip.label }}
-    </button>
+    @for (c of chips; track c.key) {
+      <button class="vt-chip" [class.on]="filtroActivo()===c.key" (click)="setFiltro(c.key)">
+        <ion-icon [name]="c.icon"/>{{ c.label }}
+      </button>
     }
   </div>
 
-  <!-- BOTTOM SHEET -->
-  <div class="vt-sheet" [class.is-expanded]="sheetExpanded()">
+  <!-- ══════ BOTTOM SHEET — LISTA ══════ -->
+  @if (!seleccionada()) {
+    <div class="vt-sheet" [class.expanded]="sheetExpanded()">
 
-    <div class="vt-sheet-handle-zone" (click)="toggleSheet()">
-      <div class="vt-handle"></div>
-      <div class="vt-sheet-header">
-        <span class="vt-sheet-title">
-          @if (cargando()) { Buscando… }
-          @else { {{ resultados().length }} veterinarias cercanas }
-        </span>
-        <ion-icon [name]="sheetExpanded() ? 'chevron-down-outline' : 'chevron-up-outline'" class="vt-sheet-chevron" />
+      <div class="vt-sheet-top" (click)="toggleSheet()">
+        <div class="vt-handle"></div>
+        <div class="vt-sheet-hdr">
+          <span class="vt-sheet-title">{{ resultados().length }} veterinarias cercanas</span>
+          <ion-icon [name]="sheetExpanded() ? 'chevron-down-outline' : 'chevron-up-outline'" class="vt-chevron"/>
+        </div>
       </div>
+
+      <div class="vt-list">
+        @for (v of resultados(); track v.id) {
+          <div class="vt-card" (click)="seleccionar(v)">
+            <div class="vt-avatar" [style.background]="v.color">
+              <ion-icon name="medkit-outline"/>
+            </div>
+            <div class="vt-card-body">
+              <p class="vt-card-name">{{ v.nombre }}</p>
+              <p class="vt-card-addr">{{ v.direccion }}</p>
+              <div class="vt-card-meta">
+                <span class="vt-tag vt-tag--dist">
+                  <ion-icon name="walk-outline"/>{{ v.distancia }}
+                </span>
+                @if (v.abierto) {
+                  <span class="vt-tag vt-tag--open">Abierto</span>
+                } @else {
+                  <span class="vt-tag vt-tag--closed">Cerrado</span>
+                }
+              </div>
+            </div>
+            <div class="vt-card-arr"><ion-icon name="arrow-forward-outline"/></div>
+          </div>
+        }
+
+        @if (!resultados().length) {
+          <div class="vt-empty">
+            <ion-icon name="paw-outline"/>
+            <p>Sin resultados para "{{ query() }}"</p>
+            <button class="vt-ghost-btn" (click)="limpiarBusqueda()">Limpiar búsqueda</button>
+          </div>
+        }
+      </div>
+
     </div>
+  }
 
-    <div class="vt-list">
+  <!-- ══════ PANEL DETALLE ══════ -->
+  @if (seleccionada(); as v) {
+    <div class="vt-detail">
 
-      @if (cargando()) {
-      @for (sk of [1,2,3]; track sk) {
-      <div class="vt-sk-card">
-        <div class="vt-sk-avatar"></div>
-        <div class="vt-sk-lines">
-          <div class="vt-sk-line vt-sk-line--title"></div>
-          <div class="vt-sk-line vt-sk-line--sub"></div>
-        </div>
+      <div class="vt-detail-topbar">
+        <div class="vt-handle"></div>
+        <button class="vt-close" (click)="cerrarDetalle()">
+          <ion-icon name="close-outline"/>
+        </button>
       </div>
-      }
-      }
 
-      @if (!cargando()) {
-      @for (v of resultados(); track v.id) {
-      <div class="vt-card" [class.is-selected]="seleccionada()?.id === v.id" (click)="seleccionar(v)">
-        <div class="vt-card-avatar" [style.background]="v.color">
-          <ion-icon name="medkit-outline" />
+      <!-- Hero: avatar + nombre + badges -->
+      <div class="vt-detail-hero">
+        <div class="vt-detail-ava" [style.background]="v.color">
+          <ion-icon name="medkit-outline"/>
         </div>
-        <div class="vt-card-body">
-          <p class="vt-card-name">{{ v.nombre }}</p>
-          <p class="vt-card-address">{{ v.direccion }}</p>
-          <div class="vt-card-meta">
-            <span class="vt-badge vt-badge--dist">
-              <ion-icon name="walk-outline" />
-              {{ v.distancia }}
+        <div class="vt-detail-title">
+          <h2 class="vt-detail-name">{{ v.nombre }}</h2>
+          <div class="vt-detail-tags">
+            <span class="vt-tag vt-tag--dist">
+              <ion-icon name="walk-outline"/>{{ v.distancia }}
             </span>
             @if (v.abierto) {
-            <span class="vt-badge vt-badge--open">Abierto</span>
+              <span class="vt-tag vt-tag--open">Abierto ahora</span>
             } @else {
-            <span class="vt-badge vt-badge--closed">Cerrado</span>
+              <span class="vt-tag vt-tag--closed">Cerrado</span>
             }
           </div>
         </div>
-        <button class="vt-card-cta" (click)="verDetalle(v); $event.stopPropagation()">
-          <ion-icon name="arrow-forward-outline" />
-        </button>
       </div>
-      }
 
-      @if (!resultados().length) {
-      <div class="vt-empty">
-        <ion-icon name="paw-outline" class="vt-empty-icon" />
-        <p>No encontramos veterinarias aquí.</p>
-        <button class="vt-btn-ghost" (click)="limpiarBusqueda()">Limpiar búsqueda</button>
+      <!-- Filas de información -->
+      <div class="vt-rows">
+
+        <div class="vt-row">
+          <div class="vt-row-ico vt-row-ico--blue">
+            <ion-icon name="locate-outline"/>
+          </div>
+          <div class="vt-row-body">
+            <p class="vt-row-label">Dirección</p>
+            <p class="vt-row-val">{{ v.direccion }}</p>
+          </div>
+        </div>
+
+        <div class="vt-row">
+          <div class="vt-row-ico vt-row-ico--amber">
+            <ion-icon name="time-outline"/>
+          </div>
+          <div class="vt-row-body">
+            <p class="vt-row-label">Horario</p>
+            <p class="vt-row-val">{{ v.horario }}</p>
+          </div>
+        </div>
+
+        <div class="vt-row vt-row--tap" (click)="llamar(v.telefono)">
+          <div class="vt-row-ico vt-row-ico--green">
+            <ion-icon name="call-outline"/>
+          </div>
+          <div class="vt-row-body">
+            <p class="vt-row-label">Teléfono</p>
+            <p class="vt-row-val vt-row-val--link">{{ v.telefono }}</p>
+          </div>
+          <ion-icon name="arrow-forward-outline" class="vt-row-arr"/>
+        </div>
+
+        <div class="vt-row vt-row--tap" (click)="enviarEmail(v.email)">
+          <div class="vt-row-ico vt-row-ico--rose">
+            <ion-icon name="mail-outline"/>
+          </div>
+          <div class="vt-row-body">
+            <p class="vt-row-label">Correo</p>
+            <p class="vt-row-val vt-row-val--link">{{ v.email }}</p>
+          </div>
+          <ion-icon name="arrow-forward-outline" class="vt-row-arr"/>
+        </div>
+
+        <div class="vt-row">
+          <div class="vt-row-ico vt-row-ico--fb">
+            <ion-icon name="logo-facebook"/>
+          </div>
+          <div class="vt-row-body">
+            <p class="vt-row-label">Facebook</p>
+            <p class="vt-row-val">{{ v.facebook }}</p>
+          </div>
+        </div>
+
       </div>
-      }
-      }
+
+      <!-- CTA -->
+      <button class="vt-cta" (click)="llamar(v.telefono)">
+        <ion-icon name="call-outline"/>
+        Llamar ahora
+      </button>
 
     </div>
-  </div>
+  }
 
 </ion-content>
 
-<app-navbar />
+<app-navbar/>
