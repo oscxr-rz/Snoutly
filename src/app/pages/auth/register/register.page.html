@@ -1,58 +1,123 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/login" />
-    </ion-buttons>
-    <ion-title>Crear sesión</ion-title>
-  </ion-toolbar>
-</ion-header>
+<!-- ══════════════════════════════════════════════════
+     TOPBAR
+     ══════════════════════════════════════════════════ -->
+<div class="rg-topbar">
+  <button class="rg-topbar-btn" (click)="iniciarSesion()" aria-label="Regresar">
+    <ion-icon name="chevron-back-outline" />
+  </button>
 
-<ion-content>
-  <div class="form-card">
+  <div class="rg-brand">
+    <ion-icon name="paw-outline" class="rg-brand-paw" />
+    <span class="rg-brand-name">Snoutly</span>
+  </div>
 
-    <div class="field">
-      <label>Nombre:</label>
-      <input type="text" [ngModel]="nombre()" (ngModelChange)="nombre.set($event)" autocomplete="name" />
-    </div>
+  <div style="width:36px"></div>
+</div>
 
-    <div class="field">
-      <label>Correo electrónico:</label>
-      <input type="email" [ngModel]="correo()" (ngModelChange)="correo.set($event)" autocomplete="email" />
-    </div>
+<ion-content [fullscreen]="true" class="rg-content">
 
-    <div class="field">
-      <label>Contraseña:</label>
-      <div class="input-icon-wrap">
-        <input [type]="passwordType" [ngModel]="password()" (ngModelChange)="password.set($event)"
-          autocomplete="new-password" />
-        <button class="icon-btn" (click)="showPassword.set(!showPassword())">
-          <ion-icon [name]="showPassword() ? 'eye-outline' : 'eye-off-outline'" />
-        </button>
+  <!-- ══════════════════════════════════════════════════
+       HERO BAND
+       ══════════════════════════════════════════════════ -->
+  <div class="rg-hero">
+    <span class="rg-hero-eyebrow">Registro</span>
+    <h1 class="rg-hero-title">Crear cuenta</h1>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       BODY
+       ══════════════════════════════════════════════════ -->
+  <div class="rg-body">
+
+    <div class="rg-form">
+
+      <!-- Nombre -->
+      <div class="rg-field">
+        <label class="rg-label">Nombre completo</label>
+        <input
+          class="rg-input"
+          type="text"
+          [ngModel]="nombre()"
+          (ngModelChange)="nombre.set($event)"
+          placeholder="Ej. María García"
+          autocomplete="name"
+        />
       </div>
-    </div>
 
-    <div class="field">
-      <label>Rectificar contraseña:</label>
-      <div class="input-icon-wrap">
-        <input [type]="confirmPasswordType" [ngModel]="confirmPassword()" (ngModelChange)="confirmPassword.set($event)"
-          autocomplete="new-password" />
-        <button class="icon-btn" (click)="showConfirmPassword.set(!showConfirmPassword())">
-          <ion-icon [name]="showConfirmPassword() ? 'eye-outline' : 'eye-off-outline'" />
-        </button>
+      <!-- Correo -->
+      <div class="rg-field">
+        <label class="rg-label">Correo electrónico</label>
+        <input
+          class="rg-input"
+          type="email"
+          [ngModel]="correo()"
+          (ngModelChange)="correo.set($event)"
+          placeholder="Ej. usuario@correo.com"
+          autocomplete="email"
+        />
       </div>
+
+      <!-- Contraseña -->
+      <div class="rg-field">
+        <label class="rg-label">Contraseña</label>
+        <div class="rg-input-wrap">
+          <input
+            class="rg-input"
+            [type]="passwordType"
+            [ngModel]="password()"
+            (ngModelChange)="password.set($event)"
+            placeholder="Mínimo 6 caracteres"
+            autocomplete="new-password"
+          />
+          <button class="rg-eye-btn" (click)="showPassword.set(!showPassword())" type="button">
+            <ion-icon [name]="showPassword() ? 'eye-outline' : 'eye-off-outline'" />
+          </button>
+        </div>
+      </div>
+
+      <!-- Confirmar contraseña -->
+      <div class="rg-field">
+        <label class="rg-label">Confirmar contraseña</label>
+        <div class="rg-input-wrap">
+          <input
+            class="rg-input"
+            [type]="confirmPasswordType"
+            [ngModel]="confirmPassword()"
+            (ngModelChange)="confirmPassword.set($event)"
+            placeholder="Repite tu contraseña"
+            autocomplete="new-password"
+            [class.rg-input--error]="passwordMismatch()"
+          />
+          <button class="rg-eye-btn" (click)="showConfirmPassword.set(!showConfirmPassword())" type="button">
+            <ion-icon [name]="showConfirmPassword() ? 'eye-outline' : 'eye-off-outline'" />
+          </button>
+        </div>
+        @if (passwordMismatch()) {
+          <span class="rg-error-msg">Las contraseñas no coinciden</span>
+        }
+      </div>
+
+      <!-- Botón -->
+      <button
+        class="rg-btn-submit"
+        [disabled]="loading()"
+        (click)="onSubmit()"
+      >
+        @if (loading()) {
+          <ion-spinner name="crescent" />
+        } @else {
+          Crear cuenta
+        }
+      </button>
+
     </div>
 
-    <ion-button expand="block" class="btn-siguiente" [disabled]="loading()" (click)="onSubmit()">
-      @if (loading()) {
-      <ion-spinner name="crescent" />
-      } @else {
-      Siguiente
-      }
-    </ion-button>
+    <!-- Link login -->
+    <p class="rg-login-link">
+      ¿Ya tienes una cuenta?
+      <a (click)="iniciarSesion()">Iniciar sesión</a>
+    </p>
 
   </div>
 
-  <p class="login-link">
-    ¿Ya tienes una cuenta? <a (click)="iniciarSesion()">Iniciar sesión</a>
-  </p>
 </ion-content>
