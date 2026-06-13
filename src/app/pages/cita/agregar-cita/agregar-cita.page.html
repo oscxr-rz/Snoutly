@@ -48,14 +48,21 @@
           </button>
           }
         </div>
+        @if (errorMascota()) {
+        <span class="ac-field-error">{{ errorMascota() }}</span>
+        }
         }
       </div>
 
       <!-- ── MOTIVO ── -->
       <div class="ac-field">
         <label class="ac-label">Motivo de la cita</label>
-        <input class="ac-input" type="text" [ngModel]="motivo()" (ngModelChange)="motivo.set($event)"
+        <input class="ac-input" [class.ac-input--error]="errorMotivo()" type="text" [ngModel]="motivo()"
+          (ngModelChange)="motivo.set($event)" (blur)="touchedMotivo.set(true)"
           placeholder="Ej. Revisión general, vacuna anual…" autocomplete="off" />
+        @if (errorMotivo()) {
+        <span class="ac-field-error">{{ errorMotivo() }}</span>
+        }
       </div>
 
       <!-- ── TIPO DE CITA ── -->
@@ -63,20 +70,27 @@
         <label class="ac-label">Tipo de cita</label>
         <div class="ac-chip-row">
           @for (tipo of tiposCita; track tipo.value) {
-          <button class="ac-tipo-chip" [class.active]="tipoCita() === tipo.value" (click)="tipoCita.set(tipo.value)">
+          <button class="ac-tipo-chip" [class.active]="tipoCita() === tipo.value" (click)="seleccionarTipo(tipo.value)">
             <span class="ac-tipo-emoji">{{ tipo.emoji }}</span>
             {{ tipo.label }}
           </button>
           }
         </div>
+        @if (errorTipo()) {
+        <span class="ac-field-error">{{ errorTipo() }}</span>
+        }
       </div>
 
       <!-- ── CLÍNICA + VETERINARIO ── -->
       <div class="ac-cards-row">
-        <div class="ac-info-card ac-card--rose">
-          <span class="ac-card-label">Clínica</span>
+        <div class="ac-info-card ac-card--rose" [class.ac-info-card--error]="errorClinica()">
+          <span class="ac-card-label">Clínica <span class="ac-required">*</span></span>
           <input class="ac-card-input" type="text" [ngModel]="nombreClinica()"
-            (ngModelChange)="nombreClinica.set($event)" placeholder="Nombre de la clínica" />
+            (ngModelChange)="nombreClinica.set($event)" (blur)="touchedClinica.set(true)"
+            placeholder="Nombre de la clínica" />
+          @if (errorClinica()) {
+          <span class="ac-card-error">{{ errorClinica() }}</span>
+          }
         </div>
         <div class="ac-info-card ac-card--lime">
           <span class="ac-card-label">Veterinario</span>
@@ -89,7 +103,8 @@
       <div class="ac-field">
         <label class="ac-label">Fecha y hora</label>
 
-        <div class="ac-fecha-wrap" [class.ac-fecha-wrap--filled]="fechaHoraCita()">
+        <div class="ac-fecha-wrap" [class.ac-fecha-wrap--filled]="fechaHoraCita()"
+          [class.ac-fecha-wrap--error]="errorFecha()">
           @if (fechaHoraCita()) {
           <div class="ac-fecha-partes">
             <span class="ac-fecha-dia">{{ fechaPartes().dia }}</span>
@@ -120,6 +135,10 @@
             <ion-icon slot="date-target" name="calendar-outline" />
           </ion-datetime-button>
         </div>
+
+        @if (errorFecha()) {
+        <span class="ac-field-error">{{ errorFecha() }}</span>
+        }
 
         <ion-modal [keepContentsMounted]="true" class="ac-dt-modal">
           <ng-template>
@@ -164,5 +183,13 @@
   </div>
 
 </ion-content>
+
+<!-- ── TOAST ── -->
+<div class="ac-toast" [class.ac-toast--visible]="toastVisible()" [class.ac-toast--success]="toastType() === 'success'"
+  [class.ac-toast--error]="toastType() === 'error'" role="alert" aria-live="polite">
+  <ion-icon [name]="toastType() === 'success' ? 'checkmark-circle' : 'close-circle'" class="ac-toast-icon" />
+  <span class="ac-toast-msg">{{ toastMsg() }}</span>
+  <button class="ac-toast-close" (click)="dismissToast()" aria-label="Cerrar">✕</button>
+</div>
 
 <app-navbar />

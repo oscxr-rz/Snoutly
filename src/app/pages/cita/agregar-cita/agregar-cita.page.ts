@@ -5,13 +5,13 @@ import { ActivatedRoute } from '@angular/router';
 import {
   IonContent, IonIcon, IonSpinner,
   IonDatetime, IonDatetimeButton, IonModal,
-  AlertController, NavController
+  NavController
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   chevronBackOutline, calendarOutline,
   medkitOutline, pawOutline, timeOutline,
-  checkmarkCircleOutline
+  checkmarkCircleOutline, checkmarkCircle, closeCircle
 } from 'ionicons/icons';
 import { MascotaService } from 'src/app/core/services/mascota/mascota.service';
 import { CitaService } from 'src/app/core/services/cita/cita.service';
@@ -43,6 +43,26 @@ export class AgregarCitaPage implements OnInit {
   recordatorioActivo = signal(false);
   minutosAntesRecordatorio = signal(30);
   loading = signal(false);
+
+  // ── Touched (validación en tiempo real) ──────
+  touchedMotivo = signal(false);
+  touchedTipo = signal(false);
+  touchedClinica = signal(false);
+  touchedMascota = signal(false);
+  touchedFecha = signal(false);
+
+  // ── Errores computados ───────────────────────
+  readonly errorMotivo = computed(() => this.touchedMotivo() && !this.motivo().trim() ? 'El motivo es requerido.' : null);
+  readonly errorTipo = computed(() => this.touchedTipo() && !this.tipoCita() ? 'Selecciona un tipo de cita.' : null);
+  readonly errorClinica = computed(() => this.touchedClinica() && !this.nombreClinica().trim() ? 'El nombre de la clínica es requerido.' : null);
+  readonly errorMascota = computed(() => this.touchedMascota() && !this.idMascotaSeleccionada() ? 'Selecciona una mascota.' : null);
+  readonly errorFecha = computed(() => this.touchedFecha() && !this.fechaHoraCita() ? 'Elige fecha y hora.' : null);
+
+  // ── Toast ────────────────────────────────────
+  toastVisible = signal(false);
+  toastType = signal<'success' | 'error'>('success');
+  toastMsg = signal('');
+  private toastTimer: ReturnType<typeof setTimeout> | null = null;
 
   // ── Mascota ──────────────────────────────────
   idMascotaSeleccionada = signal<number | null>(null);
@@ -79,13 +99,13 @@ export class AgregarCitaPage implements OnInit {
   private readonly mascotaService = inject(MascotaService);
   private readonly citaService = inject(CitaService);
   private readonly navCtrl = inject(NavController);
-  private readonly alertCtrl = inject(AlertController);
   private readonly route = inject(ActivatedRoute);
 
   constructor() {
     addIcons({
       chevronBackOutline, calendarOutline, medkitOutline,
-      pawOutline, timeOutline, checkmarkCircleOutline
+      pawOutline, timeOutline, checkmarkCircleOutline,
+      checkmarkCircle, closeCircle
     });
   }
 
@@ -106,9 +126,7 @@ export class AgregarCitaPage implements OnInit {
     this.mascotaService.obtenerMascotas().subscribe({
       next: (res) => {
         this.mascotas.set(res.data ?? []);
-        if (preseleccionarId) {
-          this.idMascotaSeleccionada.set(preseleccionarId);
-        }
+        if (preseleccionarId) this.idMascotaSeleccionada.set(preseleccionarId);
         this.cargandoMascotas.set(false);
       },
       error: () => this.cargandoMascotas.set(false)
@@ -119,10 +137,17 @@ export class AgregarCitaPage implements OnInit {
 
   onFechaChange(event: CustomEvent): void {
     this.fechaHoraCita.set(event.detail.value ?? null);
+    this.touchedFecha.set(true);
   }
 
   seleccionarMascota(id: number): void {
     this.idMascotaSeleccionada.set(id);
+    this.touchedMascota.set(true);
+  }
+
+  seleccionarTipo(value: string): void {
+    this.tipoCita.set(value);
+    this.touchedTipo.set(true);
   }
 
   etiquetaMinutos(min: number): string {
@@ -142,9 +167,35 @@ export class AgregarCitaPage implements OnInit {
     );
   }
 
+  /** Marca todos los campos como tocados para mostrar errores al intentar guardar */
+  private marcarTodos(): void {
+    this.touchedMotivo.set(true);
+    this.touchedTipo.set(true);
+    this.touchedClinica.set(true);
+    this.touchedMascota.set(true);
+    this.touchedFecha.set(true);
+  }
+
+  // ── Toast helpers ─────────────────────────────
+  showToast(type: 'success' | 'error', msg: string): void {
+    if (this.toastTimer) clearTimeout(this.toastTimer);
+    this.toastType.set(type);
+    this.toastMsg.set(msg);
+    this.toastVisible.set(true);
+    this.toastTimer = setTimeout(() => this.toastVisible.set(false), 3500);
+  }
+
+  dismissToast(): void {
+    if (this.toastTimer) clearTimeout(this.toastTimer);
+    this.toastVisible.set(false);
+  }
+
+  // ── Guardar ───────────────────────────────────
   async onGuardar(): Promise<void> {
+    this.marcarTodos();
+
     if (!this.formValido) {
-      await this.mostrarAlertaValidacion();
+      this.showToast('error', 'Completa todos los campos requeridos antes de continuar.');
       return;
     }
 
@@ -162,28 +213,24 @@ export class AgregarCitaPage implements OnInit {
     };
 
     this.citaService.agregarCita(this.idMascotaSeleccionada()!, payload).subscribe({
-      next: () => {
-        this.loading.set(false);
-        this.navCtrl.back();
+      next: (res) => {
+        if (!res.success) {
+          this.loading.set(false);
+          const msg = res.message ?? 'No se pudo registrar la cita. Intenta de nuevo.';
+          this.showToast('error', msg);
+          return;
+        } else {
+          this.loading.set(false);
+          this.showToast('success', '¡Cita agendada correctamente!');
+          setTimeout(() => this.navCtrl.back(), 1200);
+        }
       },
-      error: async (err) => {
+      error: (err) => {
         this.loading.set(false);
-        const alert = await this.alertCtrl.create({
-          header: 'Error al guardar',
-          message: err?.error?.message ?? 'No se pudo registrar la cita. Intenta de nuevo.',
-          buttons: ['OK']
-        });
-        await alert.present();
+        const msg = err?.error?.message ?? 'No se pudo registrar la cita. Intenta de nuevo.';
+        this.showToast('error', msg);
+        // El formulario NO se limpia — el usuario conserva sus datos
       }
     });
-  }
-
-  private async mostrarAlertaValidacion(): Promise<void> {
-    const alert = await this.alertCtrl.create({
-      header: 'Campos incompletos',
-      message: 'Por favor completa el motivo, tipo, clínica, fecha y selecciona una mascota.',
-      buttons: ['Entendido']
-    });
-    await alert.present();
   }
 }
