@@ -1,0 +1,686 @@
+// ═══════════════════════════════════════════════
+// TOKENS
+// ═══════════════════════════════════════════════
+$blue-dark : #7096D1;
+$blue-mid : #B8C8F0;
+$blue-light : #D6E3F8;
+$amber : #F9B74E;
+$amber-soft : rgba(249, 183, 78, 0.28);
+$sky : #C0DCFB;
+$lime : #E4F2A4;
+$rose : #F8C4C4;
+$ink : #1A1A2E;
+$ink-55 : rgba(26, 26, 46, 0.55);
+$ink-20 : rgba(26, 26, 46, 0.20);
+$ink-09 : rgba(26, 26, 46, 0.09);
+$white : #FFFFFF;
+$topbar-h : 56px;
+$r-card : 20px;
+$r-pill : 100px;
+$font : -apple-system,
+'SF Pro Display',
+'Helvetica Neue',
+system-ui,
+sans-serif;
+
+// ═══════════════════════════════════════════════
+// TOPBAR
+// ═══════════════════════════════════════════════
+.ac-topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: $topbar-h;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  padding-top: env(safe-area-inset-top, 0);
+  background: $blue-dark;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.10), 0 2px 12px rgba(26, 26, 46, 0.14);
+}
+
+.ac-topbar-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+
+  ion-icon {
+    font-size: 1.2rem;
+    color: $white;
+    pointer-events: none;
+  }
+
+  &:active {
+    background: rgba(255, 255, 255, 0.28);
+    transform: scale(0.90);
+  }
+}
+
+.ac-brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.ac-brand-icon {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.80);
+}
+
+.ac-brand-name {
+  font-family: $font;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: $white;
+}
+
+// ═══════════════════════════════════════════════
+// CONTENT
+// ═══════════════════════════════════════════════
+ion-content.ac-content {
+  --background: #{$white};
+  --padding-top: #{$topbar-h};
+  --padding-bottom: 0;
+}
+
+// ═══════════════════════════════════════════════
+// HERO
+// ═══════════════════════════════════════════════
+.ac-hero {
+  background: $white;
+  padding: 22px 20px 20px;
+}
+
+.ac-hero-eyebrow {
+  display: block;
+  font-family: $font;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: $ink-55;
+  margin-bottom: 7px;
+}
+
+.ac-hero-title {
+  margin: 0;
+  font-family: $font;
+  font-size: 1.95rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: $ink;
+  line-height: 1;
+}
+
+// ═══════════════════════════════════════════════
+// BODY
+// ═══════════════════════════════════════════════
+.ac-body {
+  background: $white;
+  padding: 0 18px calc(68px + env(safe-area-inset-bottom, 0));
+  animation: contentIn 0.38s ease both;
+}
+
+@keyframes contentIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ac-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+// ── Sección mascota ───────────────────────────
+.ac-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ac-section-label {
+  font-family: $font;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: $ink-55;
+}
+
+.ac-loading-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 0;
+}
+
+.ac-spinner {
+  --color: #{$blue-dark};
+}
+
+.ac-loading-text {
+  font-family: $font;
+  font-size: 0.88rem;
+  color: $ink-55;
+}
+
+.ac-empty-text {
+  font-family: $font;
+  font-size: 0.88rem;
+  color: $ink-55;
+  margin: 0;
+  padding: 10px 0;
+}
+
+.ac-mascota-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.ac-mascota-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 14px 10px;
+  border-radius: $r-card;
+  border: 1.5px solid $ink-20;
+  background: $white;
+  cursor: pointer;
+  position: relative;
+  min-width: 76px;
+  transition: border-color 0.2s ease, background 0.2s ease,
+    transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  &.active {
+    border-color: $blue-dark;
+    background: $blue-light;
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+.ac-mascota-badge {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  width: 20px;
+  height: 20px;
+  background: $blue-dark;
+  color: $white;
+  border-radius: 50%;
+  font-size: 0.65rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid $white;
+  animation: badgeIn 0.22s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes badgeIn {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.ac-mascota-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: $ink-09;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+
+  ion-icon {
+    font-size: 1.1rem;
+    color: $ink-55;
+    transition: color 0.2s ease;
+  }
+
+  &--active {
+    background: $blue-dark;
+
+    ion-icon {
+      color: $white;
+    }
+  }
+}
+
+.ac-mascota-nombre {
+  font-family: $font;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: $ink;
+  text-transform: capitalize;
+}
+
+.ac-mascota-raza {
+  font-family: $font;
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: $ink-55;
+  text-align: center;
+}
+
+// ── Campo genérico ────────────────────────────
+.ac-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.ac-label {
+  font-family: $font;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: $ink-55;
+}
+
+.ac-input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1.5px solid $ink-20;
+  border-radius: 14px;
+  padding: 13px 16px;
+  font-family: $font;
+  font-size: 0.97rem;
+  font-weight: 500;
+  outline: none;
+  background: $white;
+  color: $ink;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &::placeholder {
+    color: rgba(26, 26, 46, 0.28);
+  }
+
+  &:focus {
+    border-color: $blue-dark;
+    box-shadow: 0 0 0 3px rgba(112, 150, 209, 0.18);
+  }
+}
+
+// ── Chips tipo de cita ────────────────────────
+.ac-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ac-tipo-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 14px;
+  border-radius: $r-pill;
+  border: 1.5px solid $ink-20;
+  background: $white;
+  font-family: $font;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: $ink-55;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease,
+    border-color 0.2s ease, transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  &.active {
+    background: $ink;
+    color: $white;
+    border-color: $ink;
+    transform: scale(1.04);
+  }
+
+  &:active {
+    transform: scale(0.96);
+  }
+}
+
+.ac-tipo-emoji {
+  font-size: 0.9rem;
+}
+
+// ── Cards clínica / veterinario ───────────────
+.ac-cards-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.ac-info-card {
+  border-radius: $r-card;
+  padding: 14px 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -18px;
+    right: -18px;
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.24);
+    pointer-events: none;
+  }
+
+  &.ac-card--rose {
+    background: $rose;
+  }
+
+  &.ac-card--lime {
+    background: $lime;
+  }
+}
+
+.ac-card-label {
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: $ink-55;
+}
+
+.ac-card-input {
+  background: rgba(255, 255, 255, 0.55);
+  border: 1.5px solid rgba(26, 26, 46, 0.18);
+  border-radius: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 7px 10px;
+  font-family: $font;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: $ink;
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+
+  &::placeholder {
+    color: rgba(26, 26, 46, 0.32);
+    font-weight: 400;
+  }
+
+  &:focus {
+    border-color: rgba(26, 26, 46, 0.45);
+    background: rgba(255, 255, 255, 0.80);
+  }
+}
+
+// ── Fecha y hora ──────────────────────────────
+.ac-fecha-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1.5px solid $ink-20;
+  border-radius: 14px;
+  background: $white;
+  padding: 12px 12px 12px 16px;
+  transition: border-color 0.2s ease;
+
+  &--filled {
+    border-color: $blue-dark;
+  }
+}
+
+.ac-fecha-partes {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  flex-wrap: wrap;
+
+  &--placeholder span {
+    color: rgba(26, 26, 46, 0.28);
+    font-weight: 500;
+    font-family: $font;
+  }
+}
+
+.ac-fecha-dia {
+  font-family: $font;
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: $ink;
+}
+
+.ac-fecha-mes {
+  font-family: $font;
+  font-size: 0.80rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $blue-dark;
+  padding: 2px 6px;
+  background: $blue-light;
+  border-radius: 6px;
+  align-self: center;
+}
+
+.ac-fecha-anio {
+  font-family: $font;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: $ink-55;
+  letter-spacing: -0.01em;
+}
+
+.ac-fecha-sep {
+  font-size: 1rem;
+  font-weight: 400;
+  color: $ink-20;
+  margin: 0 1px;
+}
+
+.ac-fecha-hora {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: $font;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: $ink;
+  background: $amber;
+  border-radius: 8px;
+  padding: 3px 8px;
+  align-self: center;
+  margin-left: 6px;
+
+  ion-icon {
+    font-size: 0.80rem;
+  }
+
+  &--placeholder {
+    background: $ink-09;
+    color: $ink-55;
+  }
+}
+
+.ac-dt-btn {
+  --padding-start: 0;
+  --padding-end: 0;
+
+  &::part(native) {
+    background: $amber;
+    border-radius: 10px;
+    padding: 6px 10px;
+  }
+
+  ion-icon {
+    font-size: 1.15rem;
+    color: $ink;
+  }
+}
+
+.ac-dt-modal {
+  --width: 320px;
+  --height: auto;
+  --border-radius: 20px;
+
+  ion-datetime {
+    --background: #{$white};
+    --ion-color-primary: #{$blue-dark};
+  }
+}
+
+// ── Recordatorio ──────────────────────────────
+.ac-toggle-track {
+  display: flex;
+  background: $ink-09;
+  border-radius: $r-pill;
+  padding: 3px;
+}
+
+.ac-toggle-pill {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: $r-pill;
+  font-family: $font;
+  font-size: 0.90rem;
+  font-weight: 600;
+  color: $ink-55;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+    color 0.18s ease,
+    transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  &.active {
+    background: $ink;
+    color: $white;
+    font-weight: 700;
+    transform: scale(1.02);
+  }
+}
+
+.ac-recordatorio-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  animation: contentIn 0.22s ease both;
+}
+
+.ac-min-chip {
+  padding: 7px 13px;
+  border-radius: $r-pill;
+  border: 1.5px solid $ink-20;
+  background: $white;
+  font-family: $font;
+  font-size: 0.80rem;
+  font-weight: 600;
+  color: $ink-55;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease,
+    border-color 0.18s ease, transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  &.active {
+    background: $sky;
+    color: $ink;
+    border-color: $blue-dark;
+    transform: scale(1.04);
+  }
+
+  &:active {
+    transform: scale(0.96);
+  }
+}
+
+// ═══════════════════════════════════════════════
+// FOOTER
+// ═══════════════════════════════════════════════
+.ac-footer {
+  padding: 16px 20px;
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0));
+  background: $white;
+}
+
+.ac-btn-guardar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 15px 10px;
+  border-radius: $r-pill;
+  font-family: $font;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  border: none;
+  cursor: pointer;
+  background: $blue-dark;
+  color: $white;
+  box-shadow: 0 6px 18px rgba(112, 150, 209, 0.35);
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.18s ease,
+    opacity 0.14s ease;
+
+  ion-icon {
+    font-size: 1.1rem;
+  }
+
+  &:active {
+    transform: scale(0.97);
+    box-shadow: 0 2px 8px rgba(112, 150, 209, 0.20);
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    pointer-events: none;
+  }
+
+  ion-spinner {
+    --color: #{$white};
+  }
+}
+
+// ═══════════════════════════════════════════════
+// ACCESIBILIDAD
+// ═══════════════════════════════════════════════
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,168 @@
+<!-- TOPBAR -->
+<div class="ac-topbar">
+  <button class="ac-topbar-btn" (click)="goBack()" aria-label="Regresar">
+    <ion-icon name="chevron-back-outline" />
+  </button>
+  <div class="ac-brand">
+    <ion-icon name="medkit-outline" class="ac-brand-icon" />
+    <span class="ac-brand-name">Snoutly</span>
+  </div>
+  <div style="width:36px"></div>
+</div>
+
+<ion-content [fullscreen]="true" class="ac-content">
+
+  <!-- HERO -->
+  <div class="ac-hero">
+    <span class="ac-hero-eyebrow">Nueva cita</span>
+    <h1 class="ac-hero-title">Agenda una cita</h1>
+  </div>
+
+  <div class="ac-body">
+    <div class="ac-form">
+
+      <!-- ── SELECCIÓN DE MASCOTA ── -->
+      <div class="ac-section">
+        <span class="ac-section-label">¿Para quién es la cita?</span>
+
+        @if (cargandoMascotas()) {
+        <div class="ac-loading-row">
+          <ion-spinner name="crescent" class="ac-spinner" />
+          <span class="ac-loading-text">Cargando mascotas…</span>
+        </div>
+        } @else if (mascotas().length === 0) {
+        <p class="ac-empty-text">No tienes mascotas registradas aún.</p>
+        } @else {
+        <div class="ac-mascota-grid">
+          @for (m of mascotas(); track m.id_mascota) {
+          <button class="ac-mascota-chip" [class.active]="idMascotaSeleccionada() === m.id_mascota"
+            (click)="seleccionarMascota(m.id_mascota)">
+            @if (idMascotaSeleccionada() === m.id_mascota) {
+            <span class="ac-mascota-badge">✓</span>
+            }
+            <div class="ac-mascota-avatar" [class.ac-mascota-avatar--active]="idMascotaSeleccionada() === m.id_mascota">
+              <ion-icon name="paw-outline" />
+            </div>
+            <span class="ac-mascota-nombre">{{ m.nombre }}</span>
+            <span class="ac-mascota-raza">{{ m.raza }}</span>
+          </button>
+          }
+        </div>
+        }
+      </div>
+
+      <!-- ── MOTIVO ── -->
+      <div class="ac-field">
+        <label class="ac-label">Motivo de la cita</label>
+        <input class="ac-input" type="text" [ngModel]="motivo()" (ngModelChange)="motivo.set($event)"
+          placeholder="Ej. Revisión general, vacuna anual…" autocomplete="off" />
+      </div>
+
+      <!-- ── TIPO DE CITA ── -->
+      <div class="ac-field">
+        <label class="ac-label">Tipo de cita</label>
+        <div class="ac-chip-row">
+          @for (tipo of tiposCita; track tipo.value) {
+          <button class="ac-tipo-chip" [class.active]="tipoCita() === tipo.value" (click)="tipoCita.set(tipo.value)">
+            <span class="ac-tipo-emoji">{{ tipo.emoji }}</span>
+            {{ tipo.label }}
+          </button>
+          }
+        </div>
+      </div>
+
+      <!-- ── CLÍNICA + VETERINARIO ── -->
+      <div class="ac-cards-row">
+        <div class="ac-info-card ac-card--rose">
+          <span class="ac-card-label">Clínica</span>
+          <input class="ac-card-input" type="text" [ngModel]="nombreClinica()"
+            (ngModelChange)="nombreClinica.set($event)" placeholder="Nombre de la clínica" />
+        </div>
+        <div class="ac-info-card ac-card--lime">
+          <span class="ac-card-label">Veterinario</span>
+          <input class="ac-card-input" type="text" [ngModel]="nombreVeterinario()"
+            (ngModelChange)="nombreVeterinario.set($event)" placeholder="Nombre (opcional)" />
+        </div>
+      </div>
+
+      <!-- ── FECHA Y HORA ── -->
+      <div class="ac-field">
+        <label class="ac-label">Fecha y hora</label>
+
+        <div class="ac-fecha-wrap" [class.ac-fecha-wrap--filled]="fechaHoraCita()">
+          @if (fechaHoraCita()) {
+          <div class="ac-fecha-partes">
+            <span class="ac-fecha-dia">{{ fechaPartes().dia }}</span>
+            <span class="ac-fecha-sep">/</span>
+            <span class="ac-fecha-mes">{{ fechaPartes().mes }}</span>
+            <span class="ac-fecha-sep">/</span>
+            <span class="ac-fecha-anio">{{ fechaPartes().anio }}</span>
+            <span class="ac-fecha-hora">
+              <ion-icon name="time-outline" />
+              {{ fechaPartes().hora }}
+            </span>
+          </div>
+          } @else {
+          <div class="ac-fecha-partes ac-fecha-partes--placeholder">
+            <span>DD</span>
+            <span class="ac-fecha-sep">/</span>
+            <span>MMM</span>
+            <span class="ac-fecha-sep">/</span>
+            <span>AAAA</span>
+            <span class="ac-fecha-hora ac-fecha-hora--placeholder">
+              <ion-icon name="time-outline" />
+              HH:MM
+            </span>
+          </div>
+          }
+
+          <ion-datetime-button datetime="dtCita" class="ac-dt-btn">
+            <ion-icon slot="date-target" name="calendar-outline" />
+          </ion-datetime-button>
+        </div>
+
+        <ion-modal [keepContentsMounted]="true" class="ac-dt-modal">
+          <ng-template>
+            <ion-datetime id="dtCita" presentation="date-time" locale="es-MX" (ionChange)="onFechaChange($event)"
+              showDefaultButtons="true" doneText="Aceptar" cancelText="Cancelar" />
+          </ng-template>
+        </ion-modal>
+      </div>
+
+      <!-- ── RECORDATORIO ── -->
+      <div class="ac-field">
+        <label class="ac-label">Recordatorio</label>
+        <div class="ac-toggle-track">
+          <button class="ac-toggle-pill" [class.active]="!recordatorioActivo()"
+            (click)="recordatorioActivo.set(false)">Sin aviso</button>
+          <button class="ac-toggle-pill" [class.active]="recordatorioActivo()"
+            (click)="recordatorioActivo.set(true)">Activar</button>
+        </div>
+
+        @if (recordatorioActivo()) {
+        <div class="ac-recordatorio-chips">
+          @for (min of opcionesRecordatorio; track min) {
+          <button class="ac-min-chip" [class.active]="minutosAntesRecordatorio() === min"
+            (click)="minutosAntesRecordatorio.set(min)">{{ etiquetaMinutos(min) }}</button>
+          }
+        </div>
+        }
+      </div>
+
+    </div>
+
+    <div class="ac-footer">
+      <button class="ac-btn-guardar" [disabled]="loading()" (click)="onGuardar()">
+        @if (loading()) {
+        <ion-spinner name="crescent" />
+        } @else {
+        <ion-icon name="checkmark-circle-outline" />
+        Agendar cita
+        }
+      </button>
+    </div>
+  </div>
+
+</ion-content>
+
+<app-navbar />

@@ -1,0 +1,41 @@
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class CitaService {
+  private http = inject(HttpClient);
+
+  private get idUsuario(): number | null {
+    const usuario = localStorage.getItem('id_usuario');
+    if (!usuario) return null;
+    return Number(usuario) ?? null;
+  }
+
+  private get apiUrl(): string {
+    return `${environment.API_URL}/usuario/${this.idUsuario}/cita`;
+  }
+
+  obtenerCitas(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}`);
+  }
+
+  verCita(idCita: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${idCita}`);
+  }
+
+  agregarCita(idMascota: number, data: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/mascota/${idMascota}`, data);
+  }
+
+  actualizarCita(idCita: number, data: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${idCita}`, data);
+  }
+
+  cambiarEstado(idCita: number, estado: string): Observable<any> {
+    return this.http.patch<any>(`${this.apiUrl}/${idCita}`, { estado });
+  }
+}

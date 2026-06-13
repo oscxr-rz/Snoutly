@@ -30,10 +30,17 @@ export const routes: Routes = [
   },
   {
     path: 'map',
-    loadComponent: () => import('./pages/map/map.page').then( m => m.MapPage)
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/map/map.page').then(m => m.MapPage)
   },
   {
     path: 'perfil',
-    loadComponent: () => import('./pages/usuario/perfil/perfil.page').then( m => m.PerfilPage)
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/usuario/perfil/perfil.page').then(m => m.PerfilPage)
+  },
+  {
+    path: 'cita',
+    canActivate: [authGuard],
+    loadChildren: () => import('./pages/cita/cita.routes').then((r) => r.CITA_ROUTES),
   },
 ];

@@ -179,4 +179,9 @@ export class PerfilMascotaPage implements OnInit {
     });
     await alert.present();
   }
+
+  agendarCita(): void {
+    const idMascota = this.ids()[this.indice()];
+    this.router.navigate(['/cita/agregar'], { queryParams: { idMascota } });
+  }
 }
